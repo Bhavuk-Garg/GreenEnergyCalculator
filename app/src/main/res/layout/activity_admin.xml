@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Admin"
-    android:background="@drawable/bg">
+    >
 
     <TextView
         android:id="@+id/selectPhotoTextView"
@@ -17,8 +17,8 @@
         android:layout_marginVertical="20dp"
         />
     <ImageView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
         android:src="@drawable/camera"
         android:id="@+id/cameraImageView"
         android:layout_below="@+id/selectPhotoTextView"

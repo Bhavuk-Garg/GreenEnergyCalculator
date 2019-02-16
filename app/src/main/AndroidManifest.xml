@@ -14,7 +14,8 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".Admin"
-            android:theme="@style/LoginTheme"></activity>
+            android:theme="@style/ClassicTheme"
+            android:screenOrientation="portrait"></activity>
 
         <activity android:name=".SignUp"
             android:theme="@style/LoginTheme"
