@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Admin"
+    android:background="@drawable/bg">
+
+    <TextView
+        android:id="@+id/selectPhotoTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Your Profile Picture"
+        android:textSize="30dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginVertical="20dp"
+        />
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/camera"
+        android:id="@+id/cameraImageView"
+        android:layout_below="@+id/selectPhotoTextView"
+        android:layout_centerHorizontal="true"
+        />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/userNameEditText"
+        android:layout_below="@+id/cameraImageView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:layout_marginHorizontal="20dp"
+        android:background="@drawable/sign_button_white"
+        android:textSize="20dp"
+        android:hint="Enter Name"
+        android:padding="10dp"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/saveInfoButton"
+        android:layout_below="@+id/userNameEditText"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="30dp"
+        android:text="Submit"
+        android:background="@drawable/sign_button_bg"
+        android:textSize="20dp"/>
+
+</RelativeLayout>
