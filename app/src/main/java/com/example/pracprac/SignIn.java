@@ -133,6 +133,13 @@ public class SignIn extends AppCompatActivity  {
         }, 2000);
     }
 
-
-
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(mAuth.getCurrentUser()!=null)
+        {
+            finish();
+            startActivity(new Intent(SignIn.this,Admin.class));
+        }
+    }
 }

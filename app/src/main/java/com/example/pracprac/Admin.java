@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,9 +17,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 
 import java.io.IOException;
@@ -31,6 +42,11 @@ public class Admin extends AppCompatActivity{
     EditText nameEditText ;
     Button submit;
     Uri uriProfileImage;
+    ProgressBar progressBar;
+    FirebaseAuth mAuth;
+    ProgressBar ImageProgressBar;
+    String profileImageUrl;
+    private StorageReference mStorageRef;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +54,9 @@ public class Admin extends AppCompatActivity{
         imageView=findViewById(R.id.cameraImageView);
         submit=findViewById(R.id.saveInfoButton);
         nameEditText=findViewById(R.id.userNameEditText);
-
+        progressBar=findViewById(R.id.progressbar);
+        mAuth=FirebaseAuth.getInstance();
+        ImageProgressBar=findViewById(R.id.Imageprogressbar);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,6 +64,7 @@ public class Admin extends AppCompatActivity{
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+
             }
         });
 
@@ -53,12 +72,12 @@ public class Admin extends AppCompatActivity{
        submit.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
-               saveInfo();
+               updateInfo();
            }
        });
     }
 
-    private void saveInfo()
+    private void updateInfo()
     {
         String name=nameEditText.getText().toString().trim();
         if(name==null)
@@ -67,7 +86,68 @@ public class Admin extends AppCompatActivity{
             nameEditText.requestFocus();
             return;
         }
+        if(profileImageUrl==null)
+        {
+            Toast.makeText(Admin.this,"Please Choose a Profile picture",Toast.LENGTH_SHORT).show();
+            return;
+        }
         //Now we have to store this to firebase for particular Login user
+
+        FirebaseUser user=mAuth.getCurrentUser();
+
+            UserProfileChangeRequest profile=new UserProfileChangeRequest.Builder()
+                    .setDisplayName(name)
+                    .setPhotoUri(Uri.parse(profileImageUrl))
+                    .build()
+                    ;
+            user.updateProfile(profile).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if(task.isSuccessful())
+                    {
+                        Toast.makeText(Admin.this,"Profile Updated ",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(Admin.this,"Profile cannot be Updated",Toast.LENGTH_SHORT).show();
+                }
+            });
+    }
+
+    private void uploadImage()
+    {
+
+
+       mStorageRef = FirebaseStorage.getInstance().getReference("profilepics/"+System.currentTimeMillis()+".jpg");
+        if(uriProfileImage!=null)
+        {
+            ImageProgressBar.setVisibility(View.VISIBLE);
+            mStorageRef.putFile(uriProfileImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    ImageProgressBar.setVisibility(View.GONE);
+                    Task<Uri> task = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                    task.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+
+                            profileImageUrl = uri.toString();
+                            Toast.makeText(Admin.this,"Uploaded SUccessfully",Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+
+                    ImageProgressBar.setVisibility(View.GONE);
+                    Toast.makeText(Admin.this,"Upload Failed",Toast.LENGTH_SHORT).show();
+
+                }
+            });
+        }
     }
 
     @Override
@@ -81,6 +161,8 @@ public class Admin extends AppCompatActivity{
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uriProfileImage);
                 imageView.setImageBitmap(bitmap);
+                uploadImage();
+
             } catch (Exception e) {
                 Log.i("ERROR!",Integer.toString(requestCode));
                 e.printStackTrace();
