@@ -1,5 +1,6 @@
 package com.example.pracprac;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -11,7 +12,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -46,7 +52,9 @@ public class Admin extends AppCompatActivity{
     FirebaseAuth mAuth;
     ProgressBar ImageProgressBar;
     String profileImageUrl;
+    Toolbar toolbar;
     private StorageReference mStorageRef;
+    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +65,9 @@ public class Admin extends AppCompatActivity{
         progressBar=findViewById(R.id.progressbar);
         mAuth=FirebaseAuth.getInstance();
         ImageProgressBar=findViewById(R.id.Imageprogressbar);
+        toolbar=findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        setTitle("Green Energy");
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,7 +116,7 @@ public class Admin extends AppCompatActivity{
                 public void onComplete(@NonNull Task<Void> task) {
                     if(task.isSuccessful())
                     {
-                        Toast.makeText(Admin.this,"Profile Updated ",Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(Admin.this,SignIn.class));
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -170,5 +181,37 @@ public class Admin extends AppCompatActivity{
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
 
+        MenuInflater inflater=getMenuInflater();
+        inflater.inflate(R.menu.select_toolbar,menu);
+
+        return true;
+    }
+
+    @SuppressLint("NewApi")
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId())
+        {
+            case R.id.logOutMenu:
+                mAuth.signOut();
+                finish();
+                startActivity(new Intent(Admin.this,SignIn.class));
+                break;
+            case R.id.helPMenu:
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(mAuth.getCurrentUser().getDisplayName()!=null)
+        {
+            startActivity(new Intent(Admin.this,ChooseEnergy.class));
+        }
+    }
 }
