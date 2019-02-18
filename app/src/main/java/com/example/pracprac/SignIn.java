@@ -136,10 +136,16 @@ public class SignIn extends AppCompatActivity  {
     @Override
     protected void onStart() {
         super.onStart();
-        if(mAuth.getCurrentUser()!=null)
+        FirebaseUser user=mAuth.getCurrentUser();
+        if(user!=null)
         {
             finish();
-            startActivity(new Intent(SignIn.this,Admin.class));
+            if(user.getDisplayName()!=null)
+            {
+                startActivity(new Intent(SignIn.this,ChooseEnergy.class));
+            }
+            else
+                startActivity(new Intent(SignIn.this,Admin.class));
         }
     }
 }

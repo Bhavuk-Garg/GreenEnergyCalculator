@@ -2,6 +2,7 @@ package com.example.pracprac;
 
 import android.content.Intent;
 import android.media.tv.TvContract;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,8 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+
+import java.util.Timer;
 
 public class SignUp extends AppCompatActivity {
 
@@ -88,9 +91,9 @@ public class SignUp extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 progressBar.setVisibility(View.GONE);
                 if (task.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(), "Email Registered Successful ", Toast.LENGTH_SHORT).show();
-                    final Handler handler = new Handler();
 
+                    startActivity(new Intent(SignUp.this,Admin.class));
+                        
                 } else {
                     if (task.getException() instanceof FirebaseAuthUserCollisionException) {
                         email.setError("Email Exists Already");

@@ -7,6 +7,10 @@
     tools:context=".Admin"
     >
 
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/toolbar" />
     <TextView
         android:id="@+id/selectPhotoTextView"
         android:layout_width="wrap_content"
@@ -15,6 +19,7 @@
         android:textSize="30dp"
         android:layout_centerHorizontal="true"
         android:layout_marginVertical="20dp"
+        android:layout_below="@+id/toolbar"
         />
     <ImageView
         android:layout_width="300dp"

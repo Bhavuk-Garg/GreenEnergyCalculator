@@ -12,18 +12,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".Admin"
-            android:theme="@style/ClassicTheme"
-            android:screenOrientation="portrait"></activity>
-
-        <activity android:name=".SignUp"
-            android:theme="@style/LoginTheme"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".SignIn"
-            android:theme="@style/LoginTheme"
-            android:screenOrientation="portrait">
+        <activity android:name=".ChooseEnergy"
+            android:theme="@style/ClassicTheme"></activity>
+        <activity
+            android:name=".Admin"
+            android:screenOrientation="portrait"
+            android:theme="@style/ClassicTheme" />
+        <activity
+            android:name=".SignUp"
+            android:screenOrientation="portrait"
+            android:theme="@style/LoginTheme" />
+        <activity
+            android:name=".SignIn"
+            android:screenOrientation="portrait"
+            android:theme="@style/LoginTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
