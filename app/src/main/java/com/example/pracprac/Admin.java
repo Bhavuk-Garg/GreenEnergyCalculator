@@ -100,6 +100,7 @@ public class Admin extends AppCompatActivity{
         if(profileImageUrl==null)
         {
             Toast.makeText(Admin.this,"Please Choose a Profile picture",Toast.LENGTH_SHORT).show();
+            imageView.requestFocus();
             return;
         }
         //Now we have to store this to firebase for particular Login user
