@@ -25,7 +25,7 @@ public class ChooseEnergy extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
+        //This is initializing Tool Bar
         MenuInflater inflater=getMenuInflater();
         inflater.inflate(R.menu.select_toolbar,menu);
         return true;
