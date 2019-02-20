@@ -1,15 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ChooseEnergy">
+    tools:context=".ChooseEnergy"
+    android:orientation="vertical"
+    android:weightSum="4"
+    >
 
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/toolbar" />
 
+   <Button
+       android:id="@+id/solarButton"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:background="@drawable/solar_back"
+       android:text="Solar Energy"
+       android:textSize="30dp"
+       android:padding="20dp"
+       android:layout_marginHorizontal="20dp"
+        android:drawableLeft="@drawable/solar_image"
+       android:layout_weight="1"
+       android:layout_marginTop="30dp"
+       />
+    <Button
+        android:id="@+id/windButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/wind_back"
+        android:text="Wind Energy"
+        android:textSize="30dp"
+        android:padding="20dp"
+        android:layout_marginHorizontal="20dp"
+        android:drawableLeft="@drawable/wind_turbine"
+        android:layout_marginTop="40dp"
+        android:layout_weight="1"
+        />
 
-</RelativeLayout>
+</LinearLayout>

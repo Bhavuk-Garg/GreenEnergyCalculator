@@ -7,6 +7,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -14,6 +18,7 @@ public class ChooseEnergy extends AppCompatActivity {
 
     Toolbar toolbar;
     FirebaseAuth mAuth;
+    Button solar,wind;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,7 +26,19 @@ public class ChooseEnergy extends AppCompatActivity {
         toolbar=findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mAuth=FirebaseAuth.getInstance();
+        solar=findViewById(R.id.solarButton);
+        wind=findViewById(R.id.windButton);
+
+        solar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ChooseEnergy.this,solarActivity.class));
+            }
+        });
+
+
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -44,5 +61,13 @@ public class ChooseEnergy extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Animation animation=AnimationUtils.loadAnimation(ChooseEnergy.this,R.anim.fadein);
+        solar.startAnimation(animation);
+        wind.startAnimation(animation);
     }
 }
