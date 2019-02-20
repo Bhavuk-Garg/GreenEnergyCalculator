@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:id="@+id/relative">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/latitudeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="30dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="LATITUDE"
+            android:textColor="@android:color/background_dark"
+            android:textSize="25sp"
+            android:textStyle="bold|italic" />
+
+        <TextView
+            android:id="@+id/longitudeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/latitudeTextView"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="14dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="LONGITUDE"
+            android:textColor="@android:color/background_dark"
+            android:textSize="25sp"
+            android:textStyle="bold|italic" />
+
+        <EditText
+            android:id="@+id/editText4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/latitudeTextView"
+            android:layout_alignParentRight="true"
+            android:inputType="numberDecimal"
+            android:hint="degrees"
+            android:gravity="center_horizontal"
+            android:layout_marginRight="10dp"
+            android:ems="6"/>
+
+        <EditText
+            android:id="@+id/editText5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/editText4"
+            android:layout_marginTop="7dp"
+            android:inputType="numberDecimal"
+            android:hint="degrees"
+            android:gravity="center_horizontal"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:ems="6"
+            android:layout_alignBottom="@id/longitudeTextView"
+            />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/longitudeTextView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="34dp"
+            android:drawableLeft="@drawable/ic_my_location_black_24dp"
+            android:text="  GET LOCATION"
+            android:textColor="@android:color/background_light"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/area"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/button"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="26dp"
+            android:text="AREA OF PANEL"
+            android:textColor="@android:color/background_dark"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/power"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/area"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="26dp"
+            android:text="MAXIMUM POWER"
+            android:textColor="@android:color/background_dark"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/eff"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/power"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="26dp"
+            android:text="EFFICIENCY"
+            android:textColor="@android:color/background_dark"
+
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/editTextArea"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:ems="6"
+            android:hint="metre square"
+            android:inputType="numberDecimal"
+            android:gravity="center_horizontal"
+            android:layout_marginRight="5dp"
+            android:layout_alignTop="@id/area"
+            />
+
+        <EditText
+            android:id="@+id/editText7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="6"
+            android:hint="watt"
+            android:inputType="numberDecimal"
+            android:gravity="center_horizontal"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:layout_alignTop="@id/power"
+            />
+
+        <EditText
+            android:id="@+id/editText8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:ems="6"
+            android:hint="percentage"
+            android:inputType="numberDecimal"
+            android:gravity="center_horizontal"
+            android:layout_alignTop="@id/eff"
+            />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/eff"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="64dp"
+            android:padding="20dp"
+            android:text="CALCULATE  ENERGY"
+            android:textColor="@android:color/background_light"
+            android:textSize="20dp" />
+    </RelativeLayout>
+</ScrollView>
+

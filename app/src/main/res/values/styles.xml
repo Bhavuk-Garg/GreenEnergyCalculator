@@ -21,6 +21,13 @@
         <item name="colorPrimaryDark">#000000</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    <style name="SolarTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/lightorange</item>
+        <item name="colorPrimaryDark">@color/darkorange</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorButtonNormal">@color/darkorange</item>
+    </style>
 
 
 </resources>
