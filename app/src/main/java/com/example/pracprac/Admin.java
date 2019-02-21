@@ -115,7 +115,7 @@ public class Admin extends AppCompatActivity{
                 public void onComplete(@NonNull Task<Void> task) {
                     if(task.isSuccessful())
                     {
-                        startActivity(new Intent(Admin.this,SignIn.class));
+                        startActivity(new Intent(Admin.this,ChooseEnergy.class));
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {

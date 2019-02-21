@@ -11,13 +11,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class FirstTimeSolarinfo extends AppCompatActivity {
 
     static String LATITUDE="lat" ,LONGITUDE="lon",AREA_PANEL="area",
             EFFICIENCY="eff",MAX_POWER="max",NUMBER_OF_PANEL="numofpanel";
     EditText latEditText,lonEditText,areaEditText,maxPowerEditText,effEditText,panelCountEditText;
     Button calcEnergyButton;
-
+    String UId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +32,7 @@ public class FirstTimeSolarinfo extends AppCompatActivity {
         effEditText=findViewById(R.id.effEditText);
         calcEnergyButton=findViewById(R.id.calculateButton);
         panelCountEditText=findViewById(R.id.panelCountEditText);
+        UId=FirebaseAuth.getInstance().getCurrentUser().getUid();
         calcEnergyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -38,8 +42,6 @@ public class FirstTimeSolarinfo extends AppCompatActivity {
     }
     private void storeInfo()
     {
-        SharedPreferences pref=this.getSharedPreferences("com.example.pracprac", Context.MODE_PRIVATE);
-
         String lat,lon,area,maxPower,eff,numOfPanel;
         lat=latEditText.getText().toString().trim();
         lon=lonEditText.getText().toString().trim();
@@ -54,31 +56,17 @@ public class FirstTimeSolarinfo extends AppCompatActivity {
             return;
         }
         else {
+            solarClass obj=new solarClass(lon,lat,area,eff,numOfPanel,maxPower);
 
-        pref.edit().putString(LATITUDE,lat).apply();
-        pref.edit().putString(LONGITUDE,lon).apply();
-        pref.edit().putString(AREA_PANEL,area).apply();
-        pref.edit().putString(MAX_POWER,maxPower).apply();
-        pref.edit().putString(EFFICIENCY,eff).apply();
-        pref.edit().putString(NUMBER_OF_PANEL,numOfPanel).apply();
-        finish();
-            startActivity(new Intent(FirstTimeSolarinfo.this,SolarActivity.class));
+            FirebaseDatabase.getInstance()
+                    .getReference()
+                    .child("users")
+                    .child("solar")
+                    .child(UId)
+                    .setValue(obj);
         }
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        SharedPreferences pref=this.getSharedPreferences("com.example.pracprac",Context.MODE_PRIVATE);
-        if(pref.getString(LATITUDE,"")!="")
-        {
-            latEditText.setText(pref.getString(LATITUDE,""));
-            lonEditText.setText(pref.getString(LONGITUDE,""));
-            areaEditText.setText(pref.getString(AREA_PANEL,""));
-            maxPowerEditText.setText(pref.getString(MAX_POWER,""));
-            panelCountEditText.setText(pref.getString(NUMBER_OF_PANEL,""));
-            effEditText.setText(pref.getString(EFFICIENCY,""));
-        }
-    }
+
 }

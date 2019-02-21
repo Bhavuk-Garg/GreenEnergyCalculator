@@ -23,7 +23,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class SignIn extends AppCompatActivity  {
 
-    private FirebaseAuth mAuth;
+    public FirebaseAuth mAuth;
     ProgressBar progressBar;
     EditText email;
     EditText pass;
@@ -34,7 +34,7 @@ public class SignIn extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        FirebaseApp.initializeApp(SignIn.this);
+        FirebaseApp.initializeApp(this);
         setContentView(R.layout.activity_main);
 
         progressBar=findViewById(R.id.progressbar);

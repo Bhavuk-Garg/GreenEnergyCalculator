@@ -15,6 +15,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class ChooseEnergy extends AppCompatActivity {
 
@@ -30,15 +31,11 @@ public class ChooseEnergy extends AppCompatActivity {
         mAuth=FirebaseAuth.getInstance();
         solar=findViewById(R.id.solarButton);
         wind=findViewById(R.id.windButton);
-        final SharedPreferences pref=this.getSharedPreferences("com.example.pracprac", Context.MODE_PRIVATE);
-        solar.setOnClickListener(new View.OnClickListener() {
+       solar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(pref.getString(FirstTimeSolarinfo.LATITUDE,"")=="")
-                    startActivity(new Intent(ChooseEnergy.this, FirstTimeSolarinfo.class));
-                else
-                    startActivity(new Intent(ChooseEnergy.this,SolarActivity.class));
-            }
+                    startActivity(new Intent(ChooseEnergy.this,saveSolarInfo.class));
+                    }
         });
 
 

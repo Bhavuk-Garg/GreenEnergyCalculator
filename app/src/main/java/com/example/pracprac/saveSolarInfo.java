@@ -3,6 +3,7 @@ package com.example.pracprac;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,12 +12,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class saveSolarInfo extends AppCompatActivity {
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-    static String LATITUDE="lat" ,LONGITUDE="lon",AREA_PANEL="area",
-            EFFICIENCY="eff",MAX_POWER="max",NUMBER_OF_PANEL="numofpanel";
+public class saveSolarInfo extends AppCompatActivity {
     EditText latEditText,lonEditText,areaEditText,maxPowerEditText,effEditText,panelCountEditText;
     Button calcEnergyButton;
+    String UId;
+    solarClass data;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +36,7 @@ public class saveSolarInfo extends AppCompatActivity {
         effEditText=findViewById(R.id.effEditText);
         calcEnergyButton=findViewById(R.id.calculateButton);
         panelCountEditText=findViewById(R.id.panelCountEditText);
+        UId=FirebaseAuth.getInstance().getCurrentUser().getUid();
         calcEnergyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -37,8 +46,6 @@ public class saveSolarInfo extends AppCompatActivity {
     }
     private void storeInfo()
     {
-        SharedPreferences pref=this.getSharedPreferences("com.example.pracprac", Context.MODE_PRIVATE);
-
         String lat,lon,area,maxPower,eff,numOfPanel;
         lat=latEditText.getText().toString().trim();
         lon=lonEditText.getText().toString().trim();
@@ -53,14 +60,14 @@ public class saveSolarInfo extends AppCompatActivity {
             return;
         }
         else {
+                solarClass obj=new solarClass(lon,lat,area,eff,numOfPanel,maxPower);
 
-            pref.edit().putString(LATITUDE,lat).apply();
-            pref.edit().putString(LONGITUDE,lon).apply();
-            pref.edit().putString(AREA_PANEL,area).apply();
-            pref.edit().putString(MAX_POWER,maxPower).apply();
-            pref.edit().putString(EFFICIENCY,eff).apply();
-            pref.edit().putString(NUMBER_OF_PANEL,numOfPanel).apply();
-            Toast.makeText(saveSolarInfo.this,"Data is Updated",Toast.LENGTH_SHORT).show();
+                FirebaseDatabase.getInstance()
+                    .getReference()
+                    .child("users")
+                        .child("solar")
+                    .child(UId)
+                    .setValue(obj);
         }
 
     }
@@ -68,15 +75,34 @@ public class saveSolarInfo extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        SharedPreferences pref=this.getSharedPreferences("com.example.pracprac", Context.MODE_PRIVATE);
-        if(pref.getString(LATITUDE,"")!="")
-        {
-            latEditText.setText(pref.getString(LATITUDE,""));
-            lonEditText.setText(pref.getString(LONGITUDE,""));
-            areaEditText.setText(pref.getString(AREA_PANEL,""));
-            maxPowerEditText.setText(pref.getString(MAX_POWER,""));
-            effEditText.setText(pref.getString(EFFICIENCY,""));
-            panelCountEditText.setText(pref.getString(NUMBER_OF_PANEL,""));
-        }
+
+        FirebaseDatabase.getInstance()
+                .getReference()
+                .child("users")
+                .child(UId)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        data = dataSnapshot.getValue(solarClass.class);
+                        Log.d("value",data.getArea());
+                        latEditText.setText(data.getLat());
+                        lonEditText.setText(data.getLon());
+                        areaEditText.setText(data.getArea());
+                        maxPowerEditText.setText(data.getRatedVoltage());
+                        effEditText.setText(data.getMaxEfficieny());
+                        panelCountEditText.setText(data.getPanelCount());
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Toast.makeText(saveSolarInfo.this,"Error Connecting Database",Toast.LENGTH_SHORT);
+                    }
+
+
+
+                });
+
+
     }
 }
