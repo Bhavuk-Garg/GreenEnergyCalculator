@@ -1,6 +1,8 @@
 package com.example.pracprac;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -28,11 +30,14 @@ public class ChooseEnergy extends AppCompatActivity {
         mAuth=FirebaseAuth.getInstance();
         solar=findViewById(R.id.solarButton);
         wind=findViewById(R.id.windButton);
-
+        final SharedPreferences pref=this.getSharedPreferences("com.example.pracprac", Context.MODE_PRIVATE);
         solar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ChooseEnergy.this,Solarinfo.class));
+                if(pref.getString(FirstTimeSolarinfo.LATITUDE,"")=="")
+                    startActivity(new Intent(ChooseEnergy.this, FirstTimeSolarinfo.class));
+                else
+                    startActivity(new Intent(ChooseEnergy.this,SolarActivity.class));
             }
         });
 
@@ -52,12 +57,17 @@ public class ChooseEnergy extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId())
         {
-            case R.id.logOutMenu:
+                case R.id.solarConfig:
+                startActivity(new Intent(ChooseEnergy.this, saveSolarInfo.class));
+                break;
+
+                case R.id.logOutMenu:
                 finish();
                 mAuth.signOut();
                 startActivity(new Intent(ChooseEnergy.this,SignIn.class));
                 break;
-            case R.id.helPMenu:
+
+                case R.id.helPMenu:
                 break;
         }
         return true;

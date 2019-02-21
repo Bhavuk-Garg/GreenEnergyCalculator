@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-<item
-    android:title="LogOut"
-    android:id="@+id/logOutMenu"/>
+
+
+    <item
+        android:title="Solar Configurations"
+        android:id="@+id/solarConfig"
+        />
+    <item
+        android:title="Wind Configuration"
+        android:id="@+id/windConfig"
+        />
     <item
         android:title="Help"
         android:id="@+id/helPMenu"/>
-
+    <item
+        android:title="LogOut"
+        android:id="@+id/logOutMenu"/>
 
 </menu>
