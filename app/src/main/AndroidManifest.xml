@@ -12,8 +12,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Solarinfo"
+        <activity android:name=".saveSolarInfo"
             android:theme="@style/SolarTheme"></activity>
+        <activity android:name=".SolarActivity" />
+        <activity
+            android:name=".FirstTimeSolarinfo"
+            android:theme="@style/SolarTheme" />
         <activity
             android:name=".ChooseEnergy"
             android:theme="@style/ClassicTheme" />

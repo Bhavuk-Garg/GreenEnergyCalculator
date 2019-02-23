@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.net.Uri;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -34,6 +35,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -97,16 +99,14 @@ public class Admin extends AppCompatActivity{
             nameEditText.requestFocus();
             return;
         }
-        if(profileImageUrl==null)
-        {
-            Toast.makeText(Admin.this,"Please Choose a Profile picture",Toast.LENGTH_SHORT).show();
-            imageView.requestFocus();
-            return;
-        }
+
         //Now we have to store this to firebase for particular Login user
 
         FirebaseUser user=mAuth.getCurrentUser();
-
+        if(profileImageUrl==null)
+        {
+            return;
+        }
             UserProfileChangeRequest profile=new UserProfileChangeRequest.Builder()
                     .setDisplayName(name)
                     .setPhotoUri(Uri.parse(profileImageUrl))
@@ -117,7 +117,7 @@ public class Admin extends AppCompatActivity{
                 public void onComplete(@NonNull Task<Void> task) {
                     if(task.isSuccessful())
                     {
-                        startActivity(new Intent(Admin.this,SignIn.class));
+                        startActivity(new Intent(Admin.this,ChooseEnergy.class));
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -135,17 +135,25 @@ public class Admin extends AppCompatActivity{
        mStorageRef = FirebaseStorage.getInstance().getReference("profilepics/"+System.currentTimeMillis()+".jpg");
         if(uriProfileImage!=null)
         {
-            ImageProgressBar.setVisibility(View.VISIBLE);
+
             mStorageRef.putFile(uriProfileImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    ImageProgressBar.setVisibility(View.GONE);
                     Task<Uri> task = taskSnapshot.getMetadata().getReference().getDownloadUrl();
                     task.addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
 
                             profileImageUrl = uri.toString();
+
+                            Handler handler=new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ImageProgressBar.setProgress(0);
+
+                                }
+                            },500);
                             Toast.makeText(Admin.this,"Uploaded SUccessfully",Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -154,9 +162,14 @@ public class Admin extends AppCompatActivity{
                 @Override
                 public void onFailure(@NonNull Exception e) {
 
-                    ImageProgressBar.setVisibility(View.GONE);
                     Toast.makeText(Admin.this,"Upload Failed",Toast.LENGTH_SHORT).show();
 
+                }
+            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    double progress=(taskSnapshot.getBytesTransferred()*100)/taskSnapshot.getTotalByteCount();
+                    ImageProgressBar.setProgress((int)progress);
                 }
             });
         }
