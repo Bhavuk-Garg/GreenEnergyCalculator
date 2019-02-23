@@ -1,8 +1,6 @@
 package com.example.pracprac;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,10 +11,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 public class saveSolarInfo extends AppCompatActivity {
@@ -41,10 +40,11 @@ public class saveSolarInfo extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 storeInfo();
+
             }
         });
     }
-    private void storeInfo()
+    private boolean storeInfo()
     {
         String lat,lon,area,maxPower,eff,numOfPanel;
         lat=latEditText.getText().toString().trim();
@@ -57,10 +57,10 @@ public class saveSolarInfo extends AppCompatActivity {
         {
             Log.d("button Clicked","calculate energy");
             Toast.makeText(saveSolarInfo.this,"All Fields are mandatory ",Toast.LENGTH_LONG).show();
-            return;
+            return false;
         }
         else {
-                solarClass obj=new solarClass(lon,lat,area,eff,numOfPanel,maxPower);
+                solarClass obj=new solarClass(lon,lat,area,maxPower,eff,numOfPanel);
 
                 FirebaseDatabase.getInstance()
                     .getReference()
@@ -68,6 +68,7 @@ public class saveSolarInfo extends AppCompatActivity {
                         .child("solar")
                     .child(UId)
                     .setValue(obj);
+                return true;
         }
 
     }
@@ -76,33 +77,33 @@ public class saveSolarInfo extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        FirebaseDatabase.getInstance()
-                .getReference()
-                .child("users")
-                .child(UId)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference ref=FirebaseDatabase.getInstance().getReference().child("users")
+                .child("solar").child(UId);
 
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
+        ValueEventListener valueEvnetListener = new ValueEventListener(){
 
-                        data = dataSnapshot.getValue(solarClass.class);
-                        Log.d("value",data.getArea());
-                        latEditText.setText(data.getLat());
-                        lonEditText.setText(data.getLon());
-                        areaEditText.setText(data.getArea());
-                        maxPowerEditText.setText(data.getRatedVoltage());
-                        effEditText.setText(data.getMaxEfficieny());
-                        panelCountEditText.setText(data.getPanelCount());
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                            Toast.makeText(saveSolarInfo.this,"Error Connecting Database",Toast.LENGTH_SHORT);
-                    }
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                solarClass obj=dataSnapshot.getValue(solarClass.class);
+                if(obj==null)
+                {
+                    return;
+                }
+                latEditText.setText(obj.getLat());
+                lonEditText.setText(obj.getLon());
+                areaEditText.setText(obj.getArea());
+                effEditText.setText(obj.getMaxEfficieny());
+                panelCountEditText.setText(obj.getPanelCount());
+                maxPowerEditText.setText(obj.getRatedVoltage());
 
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                });
-
+            }
+        };
+        ref.addValueEventListener(valueEvnetListener);
 
     }
 }

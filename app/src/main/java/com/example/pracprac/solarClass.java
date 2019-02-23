@@ -11,7 +11,8 @@ public class solarClass {
         this.panelCount = panelCount;
         this.ratedVoltage=ratedVoltage;
     }
-
+    public solarClass()
+    {}
     public String getRatedVoltage()
     {
         return ratedVoltage;
