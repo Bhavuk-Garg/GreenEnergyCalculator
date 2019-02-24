@@ -105,6 +105,7 @@ public class Admin extends AppCompatActivity{
         FirebaseUser user=mAuth.getCurrentUser();
         if(profileImageUrl==null)
         {
+            Toast.makeText(this,"Please choose a profile image",Toast.LENGTH_SHORT).show();
             return;
         }
             UserProfileChangeRequest profile=new UserProfileChangeRequest.Builder()
@@ -117,6 +118,7 @@ public class Admin extends AppCompatActivity{
                 public void onComplete(@NonNull Task<Void> task) {
                     if(task.isSuccessful())
                     {
+                        finish();
                         startActivity(new Intent(Admin.this,ChooseEnergy.class));
                     }
                 }
