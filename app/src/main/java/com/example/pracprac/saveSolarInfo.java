@@ -102,6 +102,7 @@ public class saveSolarInfo extends AppCompatActivity {
                 solarClass obj=dataSnapshot.getValue(solarClass.class);
                 if(obj==null)
                 {
+                    
                     return;
                 }
                 latEditText.setText(obj.getLat());
