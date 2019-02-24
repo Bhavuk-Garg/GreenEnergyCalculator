@@ -3,6 +3,7 @@ package com.example.pracprac;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -13,12 +14,14 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class ChooseEnergy extends AppCompatActivity {
 
+    boolean doubleBackToExitPressedOnce=false;
     Toolbar toolbar;
     FirebaseAuth mAuth;
     Button solar,wind;
@@ -34,7 +37,7 @@ public class ChooseEnergy extends AppCompatActivity {
        solar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    startActivity(new Intent(ChooseEnergy.this,saveSolarInfo.class));
+                    startActivity(new Intent(ChooseEnergy.this,SolarActivity.class));
                     }
         });
 
@@ -76,5 +79,24 @@ public class ChooseEnergy extends AppCompatActivity {
         Animation animation=AnimationUtils.loadAnimation(ChooseEnergy.this,R.anim.fadein);
         solar.startAnimation(animation);
         wind.startAnimation(animation);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
     }
 }
