@@ -1,14 +1,20 @@
 package com.example.pracprac;
 
 import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -23,7 +29,9 @@ public class saveSolarInfo extends AppCompatActivity {
     Button calcEnergyButton;
     String UId;
     solarClass data;
+    Toolbar toolbar;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,14 +43,21 @@ public class saveSolarInfo extends AppCompatActivity {
         effEditText=findViewById(R.id.effEditText);
         calcEnergyButton=findViewById(R.id.calculateButton);
         panelCountEditText=findViewById(R.id.panelCountEditText);
+        toolbar=findViewById(R.id.savesolartoolbar);
+        setSupportActionBar(toolbar);
         UId=FirebaseAuth.getInstance().getCurrentUser().getUid();
         calcEnergyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                storeInfo();
+                if(storeInfo())
+                {
+                    startActivity(new Intent(saveSolarInfo.this, SolarActivity.class));
+                }
 
             }
         });
+
+
     }
     private boolean storeInfo()
     {

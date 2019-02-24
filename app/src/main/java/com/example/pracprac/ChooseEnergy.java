@@ -37,7 +37,7 @@ public class ChooseEnergy extends AppCompatActivity {
        solar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    startActivity(new Intent(ChooseEnergy.this,SolarActivity.class));
+                    startActivity(new Intent(ChooseEnergy.this,saveSolarInfo.class));
                     }
         });
 
@@ -57,7 +57,7 @@ public class ChooseEnergy extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId())
         {
-                case R.id.solarConfig:
+                case R.id.solarConfiguration:
                 startActivity(new Intent(ChooseEnergy.this, saveSolarInfo.class));
                 break;
 

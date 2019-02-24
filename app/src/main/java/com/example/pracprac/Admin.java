@@ -42,7 +42,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.net.URI;
-//i have made this change**************************************
+
 public class Admin extends AppCompatActivity{
 
     private static final int PICK_IMAGE=101;
