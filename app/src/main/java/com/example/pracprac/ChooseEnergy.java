@@ -37,9 +37,15 @@ public class ChooseEnergy extends AppCompatActivity {
        solar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    startActivity(new Intent(ChooseEnergy.this,SolarActivity.class));
+                    startActivity(new Intent(ChooseEnergy.this,saveSolarInfo.class));
                     }
         });
+       wind.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               startActivity(new Intent(ChooseEnergy.this,save_wind_info.class));
+           }
+       });
 
 
 
@@ -58,15 +64,19 @@ public class ChooseEnergy extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId())
         {
-                case R.id.solarConfig:
+                case R.id.solarConfiguration:
                 startActivity(new Intent(ChooseEnergy.this, saveSolarInfo.class));
                 break;
 
+            case R.id.windConfig:
+                startActivity(new Intent(ChooseEnergy.this, save_wind_info.class));
+                break;
                 case R.id.logOutMenu:
                 finish();
                 mAuth.signOut();
                 startActivity(new Intent(ChooseEnergy.this,SignIn.class));
                 break;
+
 
                 case R.id.helPMenu:
                 break;
