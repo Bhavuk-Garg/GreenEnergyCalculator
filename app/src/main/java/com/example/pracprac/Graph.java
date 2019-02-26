@@ -1,6 +1,7 @@
 package com.example.pracprac;
 
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,19 +19,25 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import com.github.mikephil.charting.data.Entry;
 
 import java.util.ArrayList;
 
@@ -62,6 +68,7 @@ public class Graph extends Fragment {
     RequestQueue requestQueue;
     StringRequest stringRequest;
     String Area,noofpanels, efficiency,maxpower;
+    public LineChart mchart;
 
 
     @Override
@@ -69,13 +76,24 @@ public class Graph extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        final GraphView graph = (GraphView) view.findViewById(R.id.graph);
+
+
         DatabaseReference ref = (DatabaseReference) FirebaseDatabase.getInstance().getReference().child("users");
 
         switch (choice)
         {
             case 1:
                 //solar_hourly
+                mchart = (LineChart) view.findViewById(R.id.llinechart);
+                mchart.setDragEnabled(true);
+                mchart.setScaleEnabled(true);
+                YAxis leftAxis = mchart.getAxisLeft();
+                //leftAxis.setAxisMaximum(80f);
+                //leftAxis.setAxisMinimum(-55f);
+                leftAxis.enableGridDashedLine(10f,10f,0);
+                leftAxis.setDrawLimitLinesBehindData(true);
+
+                mchart.getAxisRight().setEnabled(false);
                 ref .child("solar").child(FirebaseAuth.getInstance().getUid().toString()).
                         addValueEventListener(new ValueEventListener() {
                             @Override
@@ -100,16 +118,43 @@ public class Graph extends Fragment {
 
                                                         JSONArray array = obj.getJSONArray("forecasts");
 
-                                                        
+                                                        ArrayList<Entry> yValues = new ArrayList<>();
+                                                        ArrayList<String> timeaxis  = new ArrayList<>();
                                                         for (int i = 0; i < array.length(); i += 2) {
                                                             JSONObject item = array.getJSONObject(i);
                                                             String dni = item.getString("dni");
                                                             String time = item.getString("period_end");
                                                             long  h= (Integer.valueOf(dni)*Integer.valueOf(Area)*Integer.valueOf(noofpanels)*Integer.valueOf(efficiency))/1000*36;
                                                             Log.d("energy",String.valueOf(h));
-
+                                                            //yValues.add(new Entry(i/2,h));
+                                                            //timeaxis.add(time);
 
                                                         }
+                                                        yValues.add(new Entry(0,60));
+                                                        yValues.add(new Entry(1,70));
+                                                        yValues.add(new Entry(2,60));
+
+
+                                                        LineDataSet set1 = new LineDataSet(yValues,"Time");
+                                                        set1.setFillAlpha(101);
+                                                        set1.setColor(Color.RED);
+                                                        set1.setLineWidth(3f);
+                                                        set1.setValueTextSize(10f);
+                                                        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+                                                        dataSets.add(set1);
+
+                                                        LineData data = new LineData(dataSets);
+
+                                                        mchart.setData(data);
+                                                        XAxis xaxis = mchart.getXAxis();
+                                                        xaxis.setValueFormatter(new MyAxisValueFormatter(timeaxis));
+                                                        xaxis.setGranularity(1);
+                                                        xaxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+
+
+
+
+
 
 
                                                         //we have the array named hero inside the object
@@ -217,12 +262,21 @@ public class Graph extends Fragment {
 
             default:
                 break;
+        }
+    }
 
+    public class MyAxisValueFormatter implements IAxisValueFormatter {
+
+        private ArrayList<String> mvalues;
+        public MyAxisValueFormatter(ArrayList<String> values){
+            this.mvalues = values;
         }
 
-
-
-
+        @Override
+        public String getFormattedValue(float value, AxisBase axis) {
+            return mvalues.get((int)value);
+        }
     }
 
 }
+

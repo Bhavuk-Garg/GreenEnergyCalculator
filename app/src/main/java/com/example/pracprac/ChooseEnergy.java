@@ -64,7 +64,7 @@ public class ChooseEnergy extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId())
         {
-                case R.id.solarConfiguration:
+                case R.id.SolarConfiguration:
                 startActivity(new Intent(ChooseEnergy.this, saveSolarInfo.class));
                 break;
 
