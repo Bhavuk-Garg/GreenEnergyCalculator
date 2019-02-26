@@ -42,6 +42,7 @@ public class ChooseEnergy extends AppCompatActivity {
         });
 
 
+
     }
 
 

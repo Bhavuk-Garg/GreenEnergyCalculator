@@ -31,7 +31,7 @@ public class SolarActivity extends AppCompatActivity {
         actionbar.setHomeAsUpIndicator(R.drawable.nav_white_24dp);
         navView = findViewById(R.id.navigationView);
         drawerLayout=findViewById(R.id.drawerLayout);
-        Fragment fragment=new daily();
+        Fragment fragment=new solar_wind_fragment();
         FragmentManager manager=getSupportFragmentManager();
         FragmentTransaction transaction=manager.beginTransaction();
         transaction.replace(R.id.contentFrame,fragment);
@@ -45,10 +45,12 @@ public class SolarActivity extends AppCompatActivity {
                 switch (menuItem.getItemId())
                 {
                     case R.id.hourly:
-                        fragment=new hourly();
+                        fragment=new solar_wind_fragment();
+                        Table.choice=1;
                         break;
                     case R.id.daily:
-                        fragment=new daily();
+                        fragment=new solar_wind_fragment();
+                        Table.choice=2;
                         break;
                 }
 

@@ -15,10 +15,10 @@ import android.view.ViewGroup;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class hourly extends Fragment {
+public class solar_wind_fragment extends Fragment {
 
 
-    public hourly() {
+    public solar_wind_fragment() {
         // Required empty public constructor
     }
     private TabAdapter adapter;
@@ -31,7 +31,7 @@ public class hourly extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        return inflater.inflate(R.layout.fragment_hourly,null);
+        return inflater.inflate(R.layout.fragment_solar_wind,null);
     }
 
     @Override
@@ -41,8 +41,8 @@ public class hourly extends Fragment {
         tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
 
         adapter = new TabAdapter(getFragmentManager());
-        adapter.addFragment(new SolarGraph(), "SolarGraph");
-        adapter.addFragment(new SolarTable(), "SolarTable");
+        adapter.addFragment(new Graph(), "Graph");
+        adapter.addFragment(new Table(), "Table");
 
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
