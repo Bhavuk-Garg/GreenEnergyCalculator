@@ -10,6 +10,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,7 +19,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 
 public class SignIn extends AppCompatActivity  {
@@ -30,12 +30,31 @@ public class SignIn extends AppCompatActivity  {
     String emailString,passString;
     boolean doubleBackToExitPressedOnce = false;
 
+    //Sign In
+    RelativeLayout rellay1, rellay2;
+    Handler handler = new Handler();
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            rellay1.setVisibility(View.VISIBLE);
+            rellay2.setVisibility(View.VISIBLE);
+        }
+    };
+    //Sign In
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         FirebaseApp.initializeApp(this);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_sign_in);
+
+        //Sign In
+        rellay1 = (RelativeLayout) findViewById(R.id.rellay1);
+        rellay2 = (RelativeLayout) findViewById(R.id.rellay2);
+
+        handler.postDelayed(runnable, 1400);
+        //Sign In
 
         progressBar=findViewById(R.id.progressbar);
         TextView signUpView=findViewById(R.id.signUpTextView);
@@ -98,7 +117,7 @@ public class SignIn extends AppCompatActivity  {
                         progressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
 
-                            Log.i("SignIn", "signInWithEmail:success");
+                            Log.i("activity_sign_in", "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             Intent intent =new Intent(SignIn.this,Admin.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
