@@ -39,7 +39,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import com.github.mikephil.charting.data.Entry;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.TimeZone;
 
 
 /**
@@ -61,7 +65,7 @@ public class Graph extends Fragment {
         return inflater.inflate(R.layout.fragment_graph, container, false);
     }
 
-    static int choice=2;
+    static int choice=1;
     String latitude,longitude;
     private TextView mEmptyStateTextView;
 
@@ -69,6 +73,7 @@ public class Graph extends Fragment {
     StringRequest stringRequest;
     String Area,noofpanels, efficiency,maxpower;
     public LineChart mchart;
+
 
 
     @Override
@@ -120,19 +125,19 @@ public class Graph extends Fragment {
 
                                                         ArrayList<Entry> yValues = new ArrayList<>();
                                                         ArrayList<String> timeaxis  = new ArrayList<>();
-                                                        for (int i = 0; i < array.length(); i += 2) {
+                                                        for (int i = 0; i <=48; i += 2) {
                                                             JSONObject item = array.getJSONObject(i);
                                                             String dni = item.getString("dni");
-                                                            String time = item.getString("period_end");
-                                                            long  h= (Integer.valueOf(dni)*Integer.valueOf(Area)*Integer.valueOf(noofpanels)*Integer.valueOf(efficiency))/1000*36;
+                                                            String time = getNewDate(item.getString("period_end"));
+
+                                                            float  h= (Integer.valueOf(dni)*Integer.valueOf(Area)*Integer.valueOf(noofpanels)*Integer.valueOf(efficiency))/1000*36;
                                                             Log.d("energy",String.valueOf(h));
-                                                            //yValues.add(new Entry(i/2,h));
-                                                            //timeaxis.add(time);
+                                                            yValues.add(new Entry(i/2,h));
+                                                            timeaxis.add(time);
 
                                                         }
-                                                        yValues.add(new Entry(0,60));
-                                                        yValues.add(new Entry(1,70));
-                                                        yValues.add(new Entry(2,60));
+
+                                                        //timeaxis.add("34");
 
 
                                                         LineDataSet set1 = new LineDataSet(yValues,"Time");
@@ -224,7 +229,7 @@ public class Graph extends Fragment {
                                         String dni = item.getString("dni");
                                         String time = item.getString("period_end");
 
-                                        //solar_hour_data.add(new solar_daily_data_class(time, "dni : "+dni));
+                                        //solar_hour_data.add(new data_class(time, "dni : "+dni));
 
                                     }
                                    // mAdapter.addAll(solar_hour_data);
@@ -276,6 +281,33 @@ public class Graph extends Fragment {
         public String getFormattedValue(float value, AxisBase axis) {
             return mvalues.get((int)value);
         }
+    }
+    public String getNewDate(String getOldDate){
+
+        if (getOldDate == null){
+            return "";
+        }
+
+
+
+        SimpleDateFormat oldFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.000000'");
+
+
+        oldFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        Date value = null;
+        String dueDateAsNormal ="";
+        try {
+            value = oldFormatter.parse(getOldDate);
+            SimpleDateFormat newFormatter = new SimpleDateFormat("MM/dd/yyyy - hh:mm a");
+
+            newFormatter.setTimeZone(TimeZone.getDefault());
+            dueDateAsNormal = newFormatter.format(value);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return dueDateAsNormal;
     }
 
 }

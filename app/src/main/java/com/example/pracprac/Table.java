@@ -30,14 +30,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Locale;
-import java.util.TimeZone;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 
 /**
@@ -51,9 +44,9 @@ public class Table extends Fragment {
     solar_daily_adapter mAdapter;
     RequestQueue requestQueue;
     StringRequest stringRequest;
-    public ArrayList<solar_daily_data_class> solar_hour_data;
+    public ArrayList<data_class> solar_hour_data;
      String Area,noofpanels, efficiency,maxpower;
-
+    String rotorCount,MechMaxEff,GeneMaxEff,diameter,ratedVoltage;
     public Table() {
         // Required empty public constructor
     }
@@ -77,7 +70,7 @@ public class Table extends Fragment {
 
         mEmptyStateTextView = (TextView) view.findViewById(R.id.empty_view);
         earthquakeListView.setEmptyView(mEmptyStateTextView);
-        mAdapter = new solar_daily_adapter(getActivity(), new ArrayList<solar_daily_data_class>());
+        mAdapter = new solar_daily_adapter(getActivity(), new ArrayList<data_class>());
         earthquakeListView.setAdapter(mAdapter);
 
 
@@ -119,7 +112,7 @@ public class Table extends Fragment {
                                                             long  h= (Integer.valueOf(dni)*Integer.valueOf(Area)*Integer.valueOf(noofpanels)*Integer.valueOf(efficiency))/1000*36;
                                                             Log.d("energy",String.valueOf(h));
 
-                                                            solar_hour_data.add(new solar_daily_data_class(time, String.valueOf(h)));
+                                                            solar_hour_data.add(new data_class(time, String.valueOf(h)));
 
                                                         }
                                                         mAdapter.addAll(solar_hour_data);
@@ -160,8 +153,7 @@ public class Table extends Fragment {
 
                 break;
             case 2:
-                String url="";
-                url = "https://api.solcast.com.au/radiation/forecasts?longitude=35.165&latitude=74.211&api_key=dsQiZXOrsq3npvYi6XMs-s1RLAumDaVQ&format=json";
+                //solar daily
                 ref .child("solar").child(FirebaseAuth.getInstance().getUid().toString()).
                         addValueEventListener(new ValueEventListener() {
                             @Override
@@ -170,6 +162,57 @@ public class Table extends Fragment {
                                 if(obj!=null){
                                     latitude = obj.getLon().toString().trim();
                                     longitude = obj.getLat().toString().trim();
+                                    Area=obj.getArea();
+                                    noofpanels=obj.panelCount;
+                                    efficiency=obj.maxEfficieny;
+                                    maxpower=obj.ratedVoltage;
+                                    String url="";
+                                    url = "https://api.solcast.com.au/radiation/forecasts?longitude="+longitude+"&latitude="+latitude+"&api_key=dsQiZXOrsq3npvYi6XMs-s1RLAumDaVQ&format=json";
+                                    StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                                            new Response.Listener<String>() {
+                                                @Override
+                                                public void onResponse(String response) {
+                                                    try {
+                                                        //getting the whole json object from the response
+                                                        JSONObject obj = new JSONObject(response);
+
+                                                        JSONArray array = obj.getJSONArray("forecasts");
+
+
+                                                        for (int i = 0; i < array.length(); i += 2) {
+                                                            JSONObject item = array.getJSONObject(i);
+                                                            String dni = item.getString("dni");
+                                                            String time = item.getString("period_end");
+                                                            long  h= (Integer.valueOf(dni)*Integer.valueOf(Area)*Integer.valueOf(noofpanels)*Integer.valueOf(efficiency))/1000*36;
+                                                            Log.d("energy",String.valueOf(h));
+
+                                                            solar_hour_data.add(new data_class(time, String.valueOf(h)));
+
+                                                        }
+                                                        mAdapter.addAll(solar_hour_data);
+
+                                                        //we have the array named hero inside the object
+                                                        //so here we are getting that json array
+
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            },
+                                            new Response.ErrorListener() {
+                                                @Override
+                                                public void onErrorResponse(VolleyError error) {
+                                                    //displaying the error in toast if occurrs
+                                                    Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                    //creating a request queue
+                                    requestQueue = Volley.newRequestQueue(getActivity());
+
+                                    //adding the string request to request queue
+                                    requestQueue.add(stringRequest);
+
+
                                 }
                             }
 
@@ -178,54 +221,82 @@ public class Table extends Fragment {
                                 Toast.makeText(getActivity(), "Unable to fetch information", Toast.LENGTH_LONG).show();
                             }
                         });
-                stringRequest = new StringRequest(Request.Method.GET, url,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                try {
-                                    //getting the whole json object from the response
-                                    JSONObject obj = new JSONObject(response);
-
-                                    JSONArray array = obj.getJSONArray("forecasts");
-
-
-                                    for (int i = 0; i < array.length(); i += 2) {
-                                        JSONObject item = array.getJSONObject(i);
-                                        String dni = item.getString("dni");
-                                        String time = item.getString("period_end");
-
-                                        solar_hour_data.add(new solar_daily_data_class(time, "dni : "+dni));
-
-                                    }
-                                    mAdapter.addAll(solar_hour_data);
-
-
-                                    Log.d("length", String.valueOf(solar_hour_data.size()));
-
-                                    //we have the array named hero inside the object
-                                    //so here we are getting that json array
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                //displaying the error in toast if occurrs
-                                Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                //creating a request queue
-                requestQueue = Volley.newRequestQueue(getActivity());
-
-                //adding the string request to request queue
-                requestQueue.add(stringRequest);
 
                 break;
-
             case 3:
+                //wind hourly data
+                ref.child("wind").child(FirebaseAuth.getInstance().getUid().toString()).
+                        addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                windClass obj=dataSnapshot.getValue(windClass.class);
+                                latitude = obj.getLon().toString().trim();
+                                longitude = obj.getLat().toString().trim();
+                                diameter=obj.getDia();
+                                MechMaxEff=obj.getMechMaxEfficieny();
+                                GeneMaxEff=obj.getGeneMaxEfficieny();
+                                rotorCount=obj.getrotorCount();
+                                ratedVoltage=obj.getRatedVoltage();
+                                String url="";
+                                url = "https://api.darksky.net/forecast/7d1ff8ef8796fbcb790c6d9a424391c7/"+latitude+","+longitude+"?exclude=currently,minutely,hourly,alerts,flags";
+
+                                StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                                        new Response.Listener<String>() {
+                                            @Override
+                                            public void onResponse(String response) {
+                                                try {
+                                                    //getting the whole json object from the response
+                                                    JSONObject obj = new JSONObject(response);
+                                                    Log.i("obj",obj.getString("daily"));
+                                                    JSONObject objt = obj.getJSONObject("daily");
+                                                    JSONArray array = obj.getJSONArray("data");
+                                                    Log.i("wind speed :",array.getJSONObject(0).getString("windSpeed"));
+
+                                                    for (int i = 0; i < array.length(); i += 2) {
+                                                        JSONObject item = array.getJSONObject(i);
+
+                                                        String windSpeed = item.getString("windSpeed");
+
+                                                        String time = item.getString("time");
+
+                                                        long  h= (Integer.valueOf(windSpeed)*Integer.valueOf(Area)*Integer.valueOf(noofpanels)*Integer.valueOf(efficiency))/1000*36;
+                                                        Log.d("energy",String.valueOf(h));
+
+                                                        solar_hour_data.add(new data_class(time, String.valueOf(h)));
+
+
+                                                    }
+                                                    mAdapter.addAll(solar_hour_data);
+
+                                                    //we have the array named hero inside the object
+                                                    //so here we are getting that json array
+
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        },
+                                        new Response.ErrorListener() {
+                                            @Override
+                                            public void onErrorResponse(VolleyError error) {
+                                                //displaying the error in toast if occurrs
+                                                Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                //creating a request queue
+                                requestQueue = Volley.newRequestQueue(getActivity());
+
+                                //adding the string request to request queue
+                                requestQueue.add(stringRequest);
+
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
                 break;
             case 4:
                 break;
