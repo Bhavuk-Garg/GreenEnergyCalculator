@@ -19,6 +19,18 @@
 
         </android.support.v7.widget.Toolbar>
 
+        <EditText
+            android:id="@+id/entercitywindEdittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:layout_marginTop="70dp"
+            android:layout_marginHorizontal="20dp"
+            android:textSize="20sp"
+            android:hint="ENTER THE CITY NAME"
+            />
+
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -37,12 +49,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="LONGITUDE"
                 android:fontFamily="sans-serif-medium"
+                android:text="LONGITUDE"
                 android:textColor="@android:color/background_dark"
-                android:textSize="25sp"
-                android:textStyle="bold|italic"
-                />
+                android:textSize="25sp" />
 
             <EditText
                 android:id="@+id/longitudeEdittext"
@@ -51,8 +61,7 @@
                 android:layout_alignBottom="@id/longitudeTextView"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:ems="4"
+                android:ems="7"
                 android:gravity="center_horizontal"
                 android:hint="degrees"
                 android:inputType="numberDecimal" />
@@ -65,8 +74,9 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="70dp"
+            android:layout_marginTop="8dp"
             android:id="@+id/latitudeLayout"
+            android:layout_below="@id/button"
 
             >
 
@@ -75,12 +85,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="LATITUDE"
                 android:fontFamily="sans-serif-medium"
+                android:text="LATITUDE"
                 android:textColor="@android:color/background_dark"
-                android:textSize="25sp"
-                android:textStyle="bold|italic"
-                />
+                android:textSize="25sp" />
 
             <EditText
                 android:id="@+id/latitudeEdittext"
@@ -89,8 +97,7 @@
                 android:layout_alignBottom="@id/latitudeTextView"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:ems="3"
+                android:ems="7"
                 android:gravity="center_horizontal"
                 android:hint="degrees"
                 android:focusedByDefault="true"
@@ -101,19 +108,20 @@
             android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/longitudeLayout"
+            android:layout_below="@id/entercitywindEdittext"
             android:drawableLeft="@drawable/ic_my_location_black_24dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="34dp"
             android:text="  GET LOCATION"
             android:textColor="@android:color/background_light"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:onClick="findLocation"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_below="@id/button"
+            android:layout_below="@id/longitudeLayout"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="26dp"
             android:layout_alignParentRight="true"
