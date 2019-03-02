@@ -42,6 +42,7 @@ import com.github.mikephil.charting.data.Entry;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -50,8 +51,6 @@ import java.util.TimeZone;
  * A simple {@link Fragment} subclass.
  */
 public class Graph extends Fragment {
-
-
 
     public Graph() {
         // Required empty public constructor
@@ -64,8 +63,11 @@ public class Graph extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_graph, container, false);
     }
+    String todayString="";
+    Calendar c;
+    long dnisum=0;
+    SimpleDateFormat formatter;
 
-    static int choice=1;
     String latitude,longitude;
     private TextView mEmptyStateTextView;
 
@@ -85,9 +87,10 @@ public class Graph extends Fragment {
 
         DatabaseReference ref = (DatabaseReference) FirebaseDatabase.getInstance().getReference().child("users");
 
-        switch (choice)
+        switch (Table.choice)
         {
             case 1:
+                Log.d("bhavuk graph","hourly");
                 //solar_hourly
                 mchart = (LineChart) view.findViewById(R.id.llinechart);
                 mchart.setDragEnabled(true);
@@ -112,6 +115,8 @@ public class Graph extends Fragment {
                                     efficiency=obj.maxEfficieny;
                                     maxpower=obj.ratedVoltage;
                                     String url="";
+
+                                    //Log.d("current time ", todayString);
                                     url = "https://api.solcast.com.au/radiation/forecasts?longitude="+longitude+"&latitude="+latitude+"&api_key=dsQiZXOrsq3npvYi6XMs-s1RLAumDaVQ&format=json";
                                     StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                                             new Response.Listener<String>() {
@@ -129,6 +134,7 @@ public class Graph extends Fragment {
                                                             JSONObject item = array.getJSONObject(i);
                                                             String dni = item.getString("dni");
                                                             String time = getNewDate(item.getString("period_end"));
+
 
                                                             float  h= (Integer.valueOf(dni)*Integer.valueOf(Area)*Integer.valueOf(noofpanels)*Integer.valueOf(efficiency))/1000*36;
                                                             Log.d("energy",String.valueOf(h));
@@ -195,6 +201,17 @@ public class Graph extends Fragment {
 
                 break;
             case 2:
+                Log.d("bhavuk graph","daily");
+                mchart = (LineChart) view.findViewById(R.id.llinechart);
+                mchart.setDragEnabled(true);
+                mchart.setScaleEnabled(true);
+                 leftAxis = mchart.getAxisLeft();
+                //leftAxis.setAxisMaximum(80f);
+                //leftAxis.setAxisMinimum(-55f);
+                leftAxis.enableGridDashedLine(10f,10f,0);
+                leftAxis.setDrawLimitLinesBehindData(true);
+
+                mchart.getAxisRight().setEnabled(false);
                 String url="";
                 url = "https://api.solcast.com.au/radiation/forecasts?longitude=35.165&latitude=74.211&api_key=dsQiZXOrsq3npvYi6XMs-s1RLAumDaVQ&format=json";
                 ref .child("solar").child(FirebaseAuth.getInstance().getUid().toString()).
@@ -205,6 +222,116 @@ public class Graph extends Fragment {
                                 if(obj!=null){
                                     latitude = obj.getLon().toString().trim();
                                     longitude = obj.getLat().toString().trim();
+                                    Area=obj.getArea();
+                                    noofpanels=obj.panelCount;
+                                    efficiency=obj.maxEfficieny;
+                                    maxpower=obj.ratedVoltage;
+
+                                    c= Calendar.getInstance();
+                                    c.add(Calendar.DATE, 1);
+                                    Date todayDate = c.getTime();
+                                    formatter = new SimpleDateFormat("dd-MM-yyyy");
+                                    todayString = formatter.format(todayDate);
+
+                                    String url="";
+
+                                    //Log.d("current time ", todayString);
+                                    url = "https://api.solcast.com.au/radiation/forecasts?longitude="+longitude+"&latitude="+latitude+"&api_key=dsQiZXOrsq3npvYi6XMs-s1RLAumDaVQ&format=json";
+                                    StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                                            new Response.Listener<String>() {
+                                                @Override
+                                                public void onResponse(String response) {
+                                                    try {
+                                                        //getting the whole json object from the response
+                                                        JSONObject obj = new JSONObject(response);
+
+                                                        JSONArray array = obj.getJSONArray("forecasts");
+
+                                                        ArrayList<Entry> yValues = new ArrayList<>();
+                                                        ArrayList<String> timeaxis  = new ArrayList<>();
+                                                        int count=48,j=0;
+                                                        for (int i = 0; i <array.length(); i += 1) {
+                                                            JSONObject item = array.getJSONObject(i);
+                                                            String dni = item.getString("dni");
+                                                            String time = getNewDatedaily(item.getString("period_end"));
+                                                            Log.d("bhavuk","daily");
+
+                                                            if(!todayString.equals(time))
+                                                                continue;
+                                                            else{
+                                                                dnisum= Integer.valueOf(dni)+dnisum;
+                                                                count--;
+                                                                if(count==0)
+                                                                {
+
+                                                                    float h= (dnisum*Integer.valueOf(Area)*Integer.valueOf(noofpanels)*Integer.valueOf(efficiency))/1000*18;
+                                                                    Log.d("energy",String.valueOf(h));
+                                                                    yValues.add(new Entry(j,h));
+                                                                    timeaxis.add(time);
+
+                                                                    c.add(Calendar.DATE, 1);
+                                                                    Date todayDate = c.getTime();
+                                                                    todayString = formatter.format(todayDate);
+                                                                    count=48;
+                                                                    dnisum=0;
+                                                                    j++;
+
+                                                                }
+                                                            }
+
+
+                                                        }
+
+                                                        //timeaxis.add("34");
+
+
+                                                        LineDataSet set1 = new LineDataSet(yValues,"Time");
+                                                        set1.setFillAlpha(101);
+                                                        set1.setColor(Color.RED);
+                                                        set1.setLineWidth(3f);
+                                                        set1.setValueTextSize(10f);
+                                                        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+                                                        dataSets.add(set1);
+
+                                                        LineData data = new LineData(dataSets);
+
+                                                        mchart.setData(data);
+                                                        XAxis xaxis = mchart.getXAxis();
+                                                        xaxis.setValueFormatter(new MyAxisValueFormatter(timeaxis));
+                                                        xaxis.setGranularity(1);
+                                                        xaxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+
+
+
+
+
+
+
+                                                        //we have the array named hero inside the object
+                                                        //so here we are getting that json array
+
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+
+                            }
+
+                                            ,
+                                            new Response.ErrorListener() {
+                                                @Override
+                                                public void onErrorResponse(VolleyError error) {
+                                                    //displaying the error in toast if occurrs
+                                                    Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                    //creating a request queue
+                                    requestQueue = Volley.newRequestQueue(getActivity());
+
+                                    //adding the string request to request queue
+                                    requestQueue.add(stringRequest);
+
+
                                 }
                             }
 
@@ -213,50 +340,6 @@ public class Graph extends Fragment {
                                 Toast.makeText(getActivity(), "Unable to fetch information", Toast.LENGTH_LONG).show();
                             }
                         });
-                stringRequest = new StringRequest(Request.Method.GET, url,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                try {
-                                    //getting the whole json object from the response
-                                    JSONObject obj = new JSONObject(response);
-
-                                    JSONArray array = obj.getJSONArray("forecasts");
-
-
-                                    for (int i = 0; i < array.length(); i += 2) {
-                                        JSONObject item = array.getJSONObject(i);
-                                        String dni = item.getString("dni");
-                                        String time = item.getString("period_end");
-
-                                        //solar_hour_data.add(new data_class(time, "dni : "+dni));
-
-                                    }
-                                   // mAdapter.addAll(solar_hour_data);
-
-
-                                   // Log.d("length", String.valueOf(solar_hour_data.size()));
-
-                                    //we have the array named hero inside the object
-                                    //so here we are getting that json array
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                //displaying the error in toast if occurrs
-                                Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                //creating a request queue
-                requestQueue = Volley.newRequestQueue(getActivity());
-
-                //adding the string request to request queue
-                requestQueue.add(stringRequest);
 
                 break;
 
@@ -299,7 +382,35 @@ public class Graph extends Fragment {
         String dueDateAsNormal ="";
         try {
             value = oldFormatter.parse(getOldDate);
-            SimpleDateFormat newFormatter = new SimpleDateFormat("MM/dd/yyyy - hh:mm a");
+            SimpleDateFormat newFormatter = new SimpleDateFormat("dd/MM/yyyy - hh:mm a");
+
+            newFormatter.setTimeZone(TimeZone.getDefault());
+            dueDateAsNormal = newFormatter.format(value);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return dueDateAsNormal;
+    }
+
+    public String getNewDatedaily(String getOldDate){
+
+        if (getOldDate == null){
+            return "";
+        }
+
+
+
+        SimpleDateFormat oldFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.000000'");
+
+
+        oldFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        Date value = null;
+        String dueDateAsNormal ="";
+        try {
+            value = oldFormatter.parse(getOldDate);
+            SimpleDateFormat newFormatter = new SimpleDateFormat("dd-MM-yyyy");
 
             newFormatter.setTimeZone(TimeZone.getDefault());
             dueDateAsNormal = newFormatter.format(value);

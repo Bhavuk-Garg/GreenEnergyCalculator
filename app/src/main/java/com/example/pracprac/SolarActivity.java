@@ -47,7 +47,7 @@ public class SolarActivity extends AppCompatActivity {
                     case R.id.hourly:
                         fragment=new solar_wind_fragment();
                         Table.choice=1;
-                        break;
+                         break;
                     case R.id.daily:
                         fragment=new solar_wind_fragment();
                         Table.choice=2;

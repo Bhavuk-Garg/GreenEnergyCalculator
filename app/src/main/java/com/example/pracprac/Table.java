@@ -30,14 +30,22 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class Table extends Fragment {
-
+    String todayString="";
+    Calendar c;
+    long dnisum=0;
+    SimpleDateFormat formatter;
     static int choice=2;
     String latitude,longitude;
     private TextView mEmptyStateTextView;
@@ -80,6 +88,7 @@ public class Table extends Fragment {
         {
             case 1:
                 //solar_hourly
+                Log.d("bhavuk table","hourly");
                 ref .child("solar").child(FirebaseAuth.getInstance().getUid().toString()).
                         addValueEventListener(new ValueEventListener() {
                             @Override
@@ -108,7 +117,7 @@ public class Table extends Fragment {
                                                         for (int i = 0; i < array.length(); i += 2) {
                                                             JSONObject item = array.getJSONObject(i);
                                                             String dni = item.getString("dni");
-                                                            String time = item.getString("period_end");
+                                                            String time = getNewDate(item.getString("period_end"));
                                                             long  h= (Integer.valueOf(dni)*Integer.valueOf(Area)*Integer.valueOf(noofpanels)*Integer.valueOf(efficiency))/1000*36;
                                                             Log.d("energy",String.valueOf(h));
 
@@ -154,6 +163,8 @@ public class Table extends Fragment {
                 break;
             case 2:
                 //solar daily
+                Log.d("bhavuk table","daily");
+
                 ref .child("solar").child(FirebaseAuth.getInstance().getUid().toString()).
                         addValueEventListener(new ValueEventListener() {
                             @Override
@@ -166,6 +177,12 @@ public class Table extends Fragment {
                                     noofpanels=obj.panelCount;
                                     efficiency=obj.maxEfficieny;
                                     maxpower=obj.ratedVoltage;
+                                     c= Calendar.getInstance();
+                                    c.add(Calendar.DATE, 1);
+                                    Date todayDate = c.getTime();
+                                     formatter = new SimpleDateFormat("dd-MM-yyyy");
+                                      todayString = formatter.format(todayDate);
+                                      Log.d("nextdate",todayString);
                                     String url="";
                                     url = "https://api.solcast.com.au/radiation/forecasts?longitude="+longitude+"&latitude="+latitude+"&api_key=dsQiZXOrsq3npvYi6XMs-s1RLAumDaVQ&format=json";
                                     StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -178,15 +195,33 @@ public class Table extends Fragment {
 
                                                         JSONArray array = obj.getJSONArray("forecasts");
 
-
-                                                        for (int i = 0; i < array.length(); i += 2) {
+                                                       int count=48;
+                                                        for (int i = 0; i < array.length(); i += 1) {
                                                             JSONObject item = array.getJSONObject(i);
                                                             String dni = item.getString("dni");
-                                                            String time = item.getString("period_end");
-                                                            long  h= (Integer.valueOf(dni)*Integer.valueOf(Area)*Integer.valueOf(noofpanels)*Integer.valueOf(efficiency))/1000*36;
-                                                            Log.d("energy",String.valueOf(h));
+                                                            String time = getNewDatedaily(item.getString("period_end"));
+                                                            Log.d("date",todayString);
+                                                            Log.d("time",time);
+                                                            if(!todayString.equals(time))
+                                                                continue;
+                                                            else{
+                                                                 dnisum= Integer.valueOf(dni)+dnisum;
+                                                                count--;
+                                                                if(count==0)
+                                                                {
 
-                                                            solar_hour_data.add(new data_class(time, String.valueOf(h)));
+                                                                    long  h= (dnisum*Integer.valueOf(Area)*Integer.valueOf(noofpanels)*Integer.valueOf(efficiency))/1000*18;
+                                                                    Log.d("energy",String.valueOf(h));
+
+                                                                    solar_hour_data.add(new data_class(todayString, String.valueOf(h)));
+                                                                    c.add(Calendar.DATE, 1);
+                                                                    Date todayDate = c.getTime();
+                                                                    todayString = formatter.format(todayDate);
+                                                                    count=48;
+                                                                    dnisum=0;
+
+                                                                }
+                                                            }
 
                                                         }
                                                         mAdapter.addAll(solar_hour_data);
@@ -309,6 +344,60 @@ public class Table extends Fragment {
 
 
 
+    }
+    public String getNewDate(String getOldDate){
+
+        if (getOldDate == null){
+            return "";
+        }
+
+
+
+        SimpleDateFormat oldFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.000000'");
+
+
+        oldFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        Date value = null;
+        String dueDateAsNormal ="";
+        try {
+            value = oldFormatter.parse(getOldDate);
+            SimpleDateFormat newFormatter = new SimpleDateFormat("dd/MM/yyyy - hh:mm a");
+
+            newFormatter.setTimeZone(TimeZone.getDefault());
+            dueDateAsNormal = newFormatter.format(value);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return dueDateAsNormal;
+    }
+    public String getNewDatedaily(String getOldDate){
+
+        if (getOldDate == null){
+            return "";
+        }
+
+
+
+        SimpleDateFormat oldFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.000000'");
+
+
+        oldFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        Date value = null;
+        String dueDateAsNormal ="";
+        try {
+            value = oldFormatter.parse(getOldDate);
+            SimpleDateFormat newFormatter = new SimpleDateFormat("dd-MM-yyyy");
+
+            newFormatter.setTimeZone(TimeZone.getDefault());
+            dueDateAsNormal = newFormatter.format(value);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return dueDateAsNormal;
     }
 
     }
