@@ -46,7 +46,7 @@ public class Table extends Fragment {
     Calendar c;
     long dnisum=0;
     SimpleDateFormat formatter;
-    static int choice=2;
+    static int choice;
     String latitude,longitude;
     private TextView mEmptyStateTextView;
     solar_daily_adapter mAdapter;
@@ -273,6 +273,7 @@ public class Table extends Fragment {
                                 GeneMaxEff=obj.getGeneMaxEfficieny();
                                 rotorCount=obj.getrotorCount();
                                 ratedVoltage=obj.getRatedVoltage();
+
                                 String url="";
                                 url = "https://api.darksky.net/forecast/7d1ff8ef8796fbcb790c6d9a424391c7/"+latitude+","+longitude+"?exclude=currently,minutely,hourly,alerts,flags";
 
@@ -292,10 +293,12 @@ public class Table extends Fragment {
                                                         JSONObject item = array.getJSONObject(i);
 
                                                         String windSpeed = item.getString("windSpeed");
+                                                        windSpeed=String.valueOf(Double.valueOf(windSpeed)*1609.34/3600);
+                                                        String temp;
 
                                                         String time = item.getString("time");
 
-                                                        //long  h= (Integer.valueOf(windSpeed)*Integer.valueOf(Area)*Integer.valueOf(noofpanels)*Integer.valueOf(efficiency))/1000*36;
+                                                        long  h= (Integer.valueOf(windSpeed)*Integer.valueOf(Area)*Integer.valueOf(noofpanels)*Integer.valueOf(efficiency))/1000*36;
                                                         //Log.d("energy",String.valueOf(h));
 
                                                         solar_hour_data.add(new data_class(time, windSpeed));
@@ -335,6 +338,94 @@ public class Table extends Fragment {
                         });
                 break;
             case 4:
+                Log.d("case 3 ","  entering " );
+                ref.child("wind").child(FirebaseAuth.getInstance().getUid().toString()).
+                        addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                windClass obj=dataSnapshot.getValue(windClass.class);
+                                latitude = obj.getLon().toString().trim();
+                                longitude = obj.getLat().toString().trim();
+                                diameter=obj.getDia();
+                                MechMaxEff=obj.getMechMaxEfficieny();
+                                GeneMaxEff=obj.getGeneMaxEfficieny();
+                                rotorCount=obj.getrotorCount();
+                                ratedVoltage=obj.getRatedVoltage();
+
+                                String url="";
+                                url = "https://api.darksky.net/forecast/7d1ff8ef8796fbcb790c6d9a424391c7/"+latitude+","+longitude+"?exclude=currently,minutely,hourly,alerts,flags";
+
+                                StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                                        new Response.Listener<String>() {
+                                            @Override
+                                            public void onResponse(String response) {
+                                                try {
+                                                    //getting the whole json object from the response
+                                                    JSONObject obj = new JSONObject(response);
+                                                    // Log.i("obj",obj.getString("daily"));
+                                                    JSONObject objt = obj.getJSONObject("daily");
+                                                    JSONArray array = objt.getJSONArray("data");
+                                                    Log.d("wind speed :",array.getJSONObject(0).getString("windSpeed"));
+
+                                                    for (int i = 0; i < array.length(); i += 1) {
+                                                        JSONObject item = array.getJSONObject(i);
+
+                                                        String windSpeed = item.getString("windSpeed");
+                                                        windSpeed=String.valueOf(Double.valueOf(windSpeed)*1609.34/3600);
+                                                        Double windsp =Double.valueOf(windSpeed);
+                                                        Double temp= ((Double.valueOf(item.getString("temperatureMin")) +Double.valueOf(item.getString("temperatureMax")))/2);
+                                                        temp= (temp-32)*5/9+273.15;
+                                                        Double pressure = Double.valueOf(item.getString("pressure"))*100;
+                                                        String time = item.getString("time");
+                                                        long time2= Long.valueOf(time);
+                                                        java.util.Date formatteddate= new java.util.Date(time2*1000);
+
+
+                                                        //Date dataobject= new Date(time);
+                                                        //String formatteddate= formatDate(dataobject);
+                                                        //Log.d("formatdate",formatteddate);
+
+                                                        double  h= Double.valueOf(MechMaxEff)*Double.valueOf(GeneMaxEff)*Double.valueOf(rotorCount)*Double.valueOf(ratedVoltage)*3.14*Double.valueOf(diameter)*Double.valueOf(diameter)/4;
+
+                                                        //Log.d("energy",String.valueOf(h));
+                                                        h*=0.5*windsp*windsp*windsp*pressure/(287.05*temp)*24*3600/1000000;
+                                                        Log.d("valueof h",String.valueOf(h));
+                                                        solar_hour_data.add(new data_class(formatteddate.toString().substring(0,10), String.valueOf(h)));
+
+
+                                                    }
+                                                    mAdapter.addAll(solar_hour_data);
+
+                                                    //we have the array named hero inside the object
+                                                    //so here we are getting that json array
+
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        },
+                                        new Response.ErrorListener() {
+                                            @Override
+                                            public void onErrorResponse(VolleyError error) {
+                                                //displaying the error in toast if occurrs
+                                                Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                //creating a request queue
+                                requestQueue = Volley.newRequestQueue(getActivity());
+
+                                //adding the string request to request queue
+                                requestQueue.add(stringRequest);
+
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
                 break;
 
                 default:
@@ -399,6 +490,11 @@ public class Table extends Fragment {
         }
 
         return dueDateAsNormal;
+    }
+
+    public String formatDate(Date dataobject){
+        SimpleDateFormat dataformat= new SimpleDateFormat("MMM dd, yyyy");
+        return dataformat.format(dataobject);
     }
 
     }

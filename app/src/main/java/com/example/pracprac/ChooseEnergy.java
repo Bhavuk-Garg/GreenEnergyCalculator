@@ -37,12 +37,14 @@ public class ChooseEnergy extends AppCompatActivity {
        solar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Table.choice=2;
                     startActivity(new Intent(ChooseEnergy.this,saveSolarInfo.class));
                     }
         });
        wind.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
+               Table.choice=4;
                startActivity(new Intent(ChooseEnergy.this,save_wind_info.class));
            }
        });
