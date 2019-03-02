@@ -1,5 +1,6 @@
 package com.example.pracprac;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,8 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 
 public class wind_activity extends AppCompatActivity {
@@ -81,7 +84,14 @@ public class wind_activity extends AppCompatActivity {
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
                 return  true;
-
+            case R.id.solarlogOutMenu:
+                finish();
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(this, SignIn.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                finish();   
+                startActivity(intent);
+                return true;
 
         }
         return super.onOptionsItemSelected(item);

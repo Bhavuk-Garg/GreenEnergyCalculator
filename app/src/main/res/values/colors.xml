@@ -17,5 +17,8 @@
     <color name="tabgra">#7ecb20</color>
     <color name="tablehead">#b2ff59</color>
     <color name="tableBack">#e7ff8c</color>
-
+    <color name="solarcolor">#ffb63d</color>
+    <color name="windcolor">#ADD8E6</color>
+    <color name ="windtabcolor">#23A7D8</color>
+    <color name="solartabcolor">#f58515</color>
 </resources>

@@ -9,10 +9,10 @@
         android:id="@+id/refresh" />
     <item
         android:title="Logout"
-        android:id="@+id/help"/>
+        android:id="@+id/solarlogOutMenu"/>
     <item
         android:title="Edit Configurations"
-        android:id="@+id/contact"/>
+        android:id="@+id/solarEditConfigurations"/>
 
 
 </menu>

@@ -40,11 +40,16 @@ public class solar_wind_fragment extends Fragment {
         viewPager = (ViewPager) view.findViewById(R.id.viewPager);
         tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
 
+
         adapter = new TabAdapter(getFragmentManager());
-        adapter.addFragment(new Graph(), "Graph");
         adapter.addFragment(new Table(), "Table");
+        adapter.addFragment(new Graph(), "Graph");
 
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
+        if(Table.choice==2 || Table.choice==1)
+            tabLayout.setBackgroundColor(getResources().getColor(R.color.solartabcolor));
+        else tabLayout.setBackgroundColor(getResources().getColor(R.color.windtabcolor));
+
     }
 }

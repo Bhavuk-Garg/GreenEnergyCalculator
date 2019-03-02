@@ -88,6 +88,10 @@ public class Table extends Fragment {
         {
             case 1:
                 //solar_hourly
+                TextView solardatecolor= (TextView) view.findViewById(R.id.date);
+                solardatecolor.setBackgroundColor(getResources().getColor(R.color.solarcolor));
+                TextView solarenergycolor =(TextView) view.findViewById(R.id.energy);
+                solarenergycolor.setBackgroundColor(getResources().getColor(R.color.solarcolor));
                 Log.d("bhavuk table","hourly");
                 ref .child("solar").child(FirebaseAuth.getInstance().getUid().toString()).
                         addValueEventListener(new ValueEventListener() {
@@ -164,7 +168,10 @@ public class Table extends Fragment {
             case 2:
                 //solar daily
                 Log.d("bhavuk table","daily");
-
+                 solardatecolor= (TextView) view.findViewById(R.id.date);
+                solardatecolor.setBackgroundColor(getResources().getColor(R.color.solarcolor));
+                solarenergycolor =(TextView) view.findViewById(R.id.energy);
+                solarenergycolor.setBackgroundColor(getResources().getColor(R.color.solarcolor));
                 ref .child("solar").child(FirebaseAuth.getInstance().getUid().toString()).
                         addValueEventListener(new ValueEventListener() {
                             @Override
@@ -260,7 +267,10 @@ public class Table extends Fragment {
                 break;
             case 3:
                 //wind hourly data
-
+                TextView winddatecolor= (TextView) view.findViewById(R.id.date);
+                winddatecolor.setBackgroundColor(getResources().getColor(R.color.windcolor));
+                TextView windenergycolor =(TextView) view.findViewById(R.id.energy);
+                winddatecolor.setBackgroundColor(getResources().getColor(R.color.windcolor));
                 ref.child("wind").child(FirebaseAuth.getInstance().getUid().toString()).
                         addValueEventListener(new ValueEventListener() {
                             @Override
@@ -352,6 +362,11 @@ public class Table extends Fragment {
                         });
                 break;
             case 4:
+                winddatecolor= (TextView) view.findViewById(R.id.date);
+                winddatecolor.setBackgroundColor(getResources().getColor(R.color.windcolor));
+                 windenergycolor =(TextView) view.findViewById(R.id.energy);
+                windenergycolor.setBackgroundColor(getResources().getColor(R.color.windcolor));
+
                 Log.d("case 3 ","  entering " );
                 ref.child("wind").child(FirebaseAuth.getInstance().getUid().toString()).
                         addValueEventListener(new ValueEventListener() {

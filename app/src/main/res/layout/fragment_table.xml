@@ -4,18 +4,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Table"
-    android:theme="@style/SolarTheme">
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@color/tableBack">
+        android:background="@color/white">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="2">
+            android:weightSum="2"
+            android:id="@+id/date_energy_color">
 
             <TextView
                 android:layout_width="0dp"
@@ -27,6 +28,7 @@
                 android:background="@color/tablehead"
                 android:textSize="20sp"
                 android:padding="5dp"
+                android:id="@+id/date"
                 />
 
             <TextView
@@ -38,7 +40,8 @@
                 android:background="@color/tablehead"
                 android:textStyle="bold"
                 android:textSize="20sp"
-                android:padding="5dp"/>
+                android:padding="5dp"
+                android:id="@+id/energy"/>
 
         </LinearLayout>
 
