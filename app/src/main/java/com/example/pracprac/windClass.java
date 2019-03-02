@@ -1,14 +1,14 @@
 package com.example.pracprac;
 
 public class windClass {
-    String lon,lat,dia,m_maxEfficieny,g_maxEfficieny,panelCount,ratedVoltage;
+    String lon,lat,dia,m_maxEfficieny,g_maxEfficieny,rotorCount,ratedVoltage;
 
-    public windClass(String lon, String lat, String diameter,String ratedVoltage, String mechmaxEfficieny,String genemaxEfficieny, String panelCount) {
+    public windClass(String lon, String lat, String diameter,String ratedVoltage, String mechmaxEfficieny,String genemaxEfficieny, String rotorCount) {
         this.lon = lon;
         this.lat = lat;
         this.dia = diameter;
         this.m_maxEfficieny = mechmaxEfficieny;
-        this.panelCount = panelCount;
+        this.rotorCount = rotorCount;
         this.ratedVoltage=ratedVoltage;
         this.g_maxEfficieny = genemaxEfficieny;
     }
@@ -42,11 +42,11 @@ public class windClass {
 
 
 
-    public String getArea() {
+    public String getDia() {
         return dia;
     }
 
-    public void setArea(String diameter) {
+    public void setDia(String diameter) {
         this.dia = diameter;
     }
 
@@ -65,11 +65,11 @@ public class windClass {
         this.g_maxEfficieny = maxGeneEfficieny;
     }
 
-    public String getPanelCount() {
-        return panelCount;
+    public String getrotorCount() {
+        return rotorCount;
     }
 
-    public void setPanelCount(String panelCount) {
-        this.panelCount = panelCount;
+    public void setrotorCount(String rotorCount) {
+        this.rotorCount = rotorCount;
     }
 }

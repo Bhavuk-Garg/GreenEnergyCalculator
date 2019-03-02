@@ -15,7 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class SolarActivity extends AppCompatActivity {
+public class wind_activity extends AppCompatActivity {
 
     Toolbar toolbar;
     NavigationView navView;
@@ -23,7 +23,7 @@ public class SolarActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_solar);
+        setContentView(R.layout.activity_wind_activity);
         toolbar=findViewById(R.id.supportToolbar);
         setSupportActionBar(toolbar);
         ActionBar actionbar = getSupportActionBar();
@@ -46,11 +46,11 @@ public class SolarActivity extends AppCompatActivity {
                 {
                     case R.id.hourly:
                         fragment=new solar_wind_fragment();
-                        Table.choice=1;
-                         break;
+                        Table.choice=3;
+                        break;
                     case R.id.daily:
                         fragment=new solar_wind_fragment();
-                        Table.choice=2;
+                        Table.choice=4;
                         break;
                 }
 

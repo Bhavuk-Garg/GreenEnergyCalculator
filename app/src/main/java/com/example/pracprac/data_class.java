@@ -1,12 +1,12 @@
 package com.example.pracprac;
 
-public class solar_daily_data_class {
+public class data_class {
 
     private String date;
     private String value;
 
-    public solar_daily_data_class(){}
-    public solar_daily_data_class(String date, String value) {
+    public data_class(){}
+    public data_class(String date, String value) {
         this.date = date;
         this.value = value;
     }
