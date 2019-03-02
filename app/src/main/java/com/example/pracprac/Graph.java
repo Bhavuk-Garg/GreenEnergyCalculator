@@ -75,6 +75,7 @@ public class Graph extends Fragment {
     StringRequest stringRequest;
     String Area,noofpanels, efficiency,maxpower;
     public LineChart mchart;
+    String rotorCount,MechMaxEff,GeneMaxEff,diameter,ratedVoltage;
 
 
 
@@ -344,6 +345,143 @@ public class Graph extends Fragment {
                 break;
 
             case 3:
+
+                mchart = (LineChart) view.findViewById(R.id.llinechart);
+                mchart.setDragEnabled(true);
+                mchart.setScaleEnabled(true);
+                leftAxis = mchart.getAxisLeft();
+                //leftAxis.setAxisMaximum(80f);
+                //leftAxis.setAxisMinimum(-55f);
+                leftAxis.enableGridDashedLine(10f,10f,0);
+                leftAxis.setDrawLimitLinesBehindData(true);
+
+                mchart.getAxisRight().setEnabled(false);
+
+                ref .child("wind").child(FirebaseAuth.getInstance().getUid().toString()).
+                        addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                windClass obj = dataSnapshot.getValue(windClass.class);
+                                if(obj!=null){
+                                    latitude = obj.getLon().toString().trim();
+                                    longitude = obj.getLat().toString().trim();
+                                    diameter=obj.getDia();
+                                    MechMaxEff=obj.getMechMaxEfficieny();
+                                    GeneMaxEff=obj.getGeneMaxEfficieny();
+                                    rotorCount=obj.getrotorCount();
+                                    ratedVoltage=obj.getRatedVoltage();
+
+
+                                    String url="";
+
+                                    //Log.d("current time ", todayString);
+                                    url = "https://api.darksky.net/forecast/7d1ff8ef8796fbcb790c6d9a424391c7/"+latitude+","+longitude+"?exclude=currently,minutely,daily,alerts,flags";                                    StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                                            new Response.Listener<String>() {
+                                                @Override
+                                                public void onResponse(String response) {
+                                                    try {
+                                                        //getting the whole json object from the response
+                                                        JSONObject obj = new JSONObject(response);
+
+                                                        JSONObject objt = obj.getJSONObject("hourly");
+                                                        JSONArray array = objt.getJSONArray("data");
+
+                                                        ArrayList<Entry> yValues = new ArrayList<>();
+                                                        ArrayList<String> timeaxis  = new ArrayList<>();
+                                                        float count=48,j=0;
+                                                        for (int i = 0; i <=24; i += 1) {
+                                                            JSONObject item = array.getJSONObject(i);
+                                                            String windSpeed = item.getString("windSpeed");
+                                                            windSpeed=String.valueOf(Double.valueOf(windSpeed)*1609.34/3600);
+                                                            Double windsp =Double.valueOf(windSpeed);
+                                                            Double temp= ((Double.valueOf(item.getString("temperature")) ));
+                                                            temp= (temp-32)*5/9+273.15;
+                                                            //Log.d("temp",temp);
+                                                            Double pressure = Double.valueOf(item.getString("pressure"))*100;
+                                                            String time = item.getString("time");
+                                                            long time2= Long.valueOf(time);
+                                                            java.util.Date formatteddate= new java.util.Date(time2*1000);
+
+
+
+                                                            //Date dataobject= new Date(time);
+                                                            //String formatteddate= formatDate(dataobject);
+                                                            //Log.d("formatdate",formatteddate);
+
+                                                            float  h= (float)(Double.valueOf(MechMaxEff)*Double.valueOf(GeneMaxEff)*Double.valueOf(rotorCount)*Double.valueOf(ratedVoltage)*3.14*Double.valueOf(diameter)*Double.valueOf(diameter)/4);
+
+                                                            //Log.d("energy",String.valueOf(h));
+                                                            h*=0.5*windsp*windsp*windsp*pressure/(287.05*temp)*24*3600/1000000;
+                                                            Log.d("bhavuk","daily");
+
+                                                                    yValues.add(new Entry(j,h));
+                                                                    String formatdate =formatteddate.toString().substring(4,10);
+                                                                    formatdate= formatdate+"\n"+formatteddate.toString().substring(11,16);
+                                                                    Log.d("formatedate=",formatdate);
+                                                                    timeaxis.add(formatdate);
+
+                                                                    j++;
+
+                                                        }
+
+                                                        //timeaxis.add("34");
+
+
+                                                        LineDataSet set1 = new LineDataSet(yValues,"Time");
+                                                        set1.setFillAlpha(101);
+                                                        set1.setColor(Color.RED);
+                                                        set1.setLineWidth(3f);
+                                                        set1.setValueTextSize(10f);
+                                                        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+                                                        dataSets.add(set1);
+
+                                                        LineData data = new LineData(dataSets);
+
+                                                        mchart.setData(data);
+                                                        XAxis xaxis = mchart.getXAxis();
+                                                        xaxis.setValueFormatter(new MyAxisValueFormatter(timeaxis));
+                                                        xaxis.setGranularity(1);
+                                                        xaxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+
+
+
+
+
+
+
+                                                        //we have the array named hero inside the object
+                                                        //so here we are getting that json array
+
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+
+                                            }
+
+                                            ,
+                                            new Response.ErrorListener() {
+                                                @Override
+                                                public void onErrorResponse(VolleyError error) {
+                                                    //displaying the error in toast if occurrs
+                                                    Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                    //creating a request queue
+                                    requestQueue = Volley.newRequestQueue(getActivity());
+
+                                    //adding the string request to request queue
+                                    requestQueue.add(stringRequest);
+
+
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                Toast.makeText(getActivity(), "Unable to fetch information", Toast.LENGTH_LONG).show();
+                            }
+                        });
                 break;
             case 4:
                 break;

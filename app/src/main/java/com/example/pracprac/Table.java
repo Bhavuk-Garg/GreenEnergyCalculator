@@ -210,7 +210,7 @@ public class Table extends Fragment {
                                                                 if(count==0)
                                                                 {
 
-                                                                    long  h= (dnisum*Integer.valueOf(Area)*Integer.valueOf(noofpanels)*Integer.valueOf(efficiency))/1000*1  8;
+                                                                    long  h= (dnisum*Integer.valueOf(Area)*Integer.valueOf(noofpanels)*Integer.valueOf(efficiency))/1000*18;
                                                                     Log.d("energy",String.valueOf(h));
 
                                                                     solar_hour_data.add(new data_class(todayString, String.valueOf(h)));
