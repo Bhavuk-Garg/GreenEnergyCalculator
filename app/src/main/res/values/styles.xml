@@ -30,12 +30,6 @@
 
 
     </style>
-    <style name="windThemeagain" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/title</item>
-        <item name="colorPrimaryDark">@color/button</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorButtonNormal">@color/button</item>
-    </style>
 
 
     <style name="MyToolbarTheme"
