@@ -1,23 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
     <TextView
     android:id="@+id/date"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_weight="1"
     tools:text="12.03.1999"
-    android:gravity="center"    />
+        android:textSize="20sp"
+    android:gravity="center"
+        android:textColor="@color/black"
+        android:background="@drawable/bg"
+        />
     <TextView
         android:id="@+id/energyvalue"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         tools:text="8.9"
-        android:gravity="center"/>
+        android:textSize="20sp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:background="@drawable/bg"/>
 
 
 </LinearLayout>

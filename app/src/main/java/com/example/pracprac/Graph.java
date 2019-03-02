@@ -346,6 +346,7 @@ public class Graph extends Fragment {
 
             case 3:
 
+                Log.d("bhavuk","in case 3");
                 mchart = (LineChart) view.findViewById(R.id.llinechart);
                 mchart.setDragEnabled(true);
                 mchart.setScaleEnabled(true);

@@ -260,7 +260,7 @@ public class Table extends Fragment {
                 break;
             case 3:
                 //wind hourly data
-                Log.d("case 3 ","  entering " );
+
                 ref.child("wind").child(FirebaseAuth.getInstance().getUid().toString()).
                         addValueEventListener(new ValueEventListener() {
                             @Override
@@ -332,6 +332,7 @@ public class Table extends Fragment {
                                             @Override
                                             public void onErrorResponse(VolleyError error) {
                                                 //displaying the error in toast if occurrs
+                                                Log.d("table","entering case 3");
                                                 Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
                                             }
                                         });
