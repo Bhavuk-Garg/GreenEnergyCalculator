@@ -147,6 +147,8 @@
                 android:text="Already have an account?  Sign In"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
+                android:layout_marginBottom="20dp"
+                android:layout_centerHorizontal="true"
                 />
         </RelativeLayout>
 
