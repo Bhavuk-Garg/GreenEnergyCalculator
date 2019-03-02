@@ -31,7 +31,6 @@ public class save_wind_info extends AppCompatActivity {
     windClass data;
     Toolbar toolbar;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +51,7 @@ public class save_wind_info extends AppCompatActivity {
             public void onClick(View v) {
                 if(storeInfo())
                 {
-                    startActivity(new Intent(save_wind_info.this, SolarActivity.class));
+                    startActivity(new Intent(save_wind_info.this, wind_activity.class));
                 }
 
             }
@@ -109,10 +108,10 @@ public class save_wind_info extends AppCompatActivity {
                 }
                 latEditText.setText(obj.getLat());
                 lonEditText.setText(obj.getLon());
-                diameterEditText.setText(obj.getArea());
+                diameterEditText.setText(obj.getDia());
                 mech_effEditText.setText(obj.getMechMaxEfficieny());
                 gene_effEditText.setText(obj.getGeneMaxEfficieny());
-                rotorCountEditText.setText(obj.getPanelCount());
+                rotorCountEditText.setText(obj.getrotorCount());
                 maxPowerEditText.setText(obj.getRatedVoltage());
 
             }
