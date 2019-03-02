@@ -9,12 +9,7 @@
         android:background="@drawable/grade_bg"
         >
 
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:id="@+id/progressbar"
-        android:visibility="gone"/>
+
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,7 +29,7 @@
                 android:id="@+id/rellay1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
+
                 android:layout_below="@+id/imageView_logo">
 
                 <TextView
@@ -43,7 +38,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:fontFamily="sans-serif-medium"
-                    android:text="Login"
+                    android:text="Sign Up"
                     android:textColor="@color/white"
                     android:textSize="30sp" />
 
@@ -79,6 +74,7 @@
                             android:hint="Enter your Email address"
                             android:paddingLeft="15dp"
                             android:paddingRight="15dp"
+                            android:textColor="@color/white"
                             android:textSize="15sp" />
                     </LinearLayout>
 
@@ -108,6 +104,7 @@
                             android:inputType="textPassword"
                             android:paddingLeft="15dp"
                             android:paddingRight="15dp"
+                            android:textColor="@color/white"
                             android:textSize="15sp" />
                     </LinearLayout>
 
@@ -133,15 +130,7 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/rellay2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:visibility="gone"
-            >
+
             <TextView
                 android:id="@+id/signInTextView"
                 android:layout_width="wrap_content"
@@ -151,10 +140,11 @@
                 android:text="Already have an account?  Sign In"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="30dp"
                 android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
                 />
-        </RelativeLayout>
+
 
     </RelativeLayout>
 

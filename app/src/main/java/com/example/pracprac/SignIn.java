@@ -51,21 +51,7 @@ public class SignIn extends AppCompatActivity  {
         FirebaseApp.initializeApp(this);
         setContentView(R.layout.activity_sign_in);
 
-        rellay1 = (RelativeLayout) findViewById(R.id.rellay1);
-        rellay2 = (RelativeLayout) findViewById(R.id.rellay2);
 
-        Handler handler = new Handler();
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                rellay1.setVisibility(View.VISIBLE);
-                rellay2.setVisibility(View.VISIBLE);
-            }
-        };
-        //Sign In
-
-        handler.postDelayed(runnable, 1400);
-        //Sign In
 
         progressBar=findViewById(R.id.progressbar);
         TextView signUpView=findViewById(R.id.signUpTextView);

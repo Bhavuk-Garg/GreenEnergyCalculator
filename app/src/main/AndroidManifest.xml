@@ -12,11 +12,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".wind_activity"
-            android:theme="@style/windThemeagain"></activity>
+        <activity android:name=".Home">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".wind_activity"
+            android:theme="@style/windThemeagain" />
         <activity
             android:name=".save_wind_info"
-            android:theme="@style/windThemeagain"></activity>
+            android:theme="@style/windThemeagain" />
         <activity
             android:name=".saveSolarInfo"
             android:theme="@style/SolarTheme" />
@@ -35,17 +43,11 @@
             android:theme="@style/ClassicTheme" />
         <activity
             android:name=".SignUp"
-            android:screenOrientation="portrait"
-             />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".SignIn"
-            android:screenOrientation="portrait"
-            >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:screenOrientation="portrait">
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <meta-data

@@ -32,13 +32,6 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/download" />
 
-            <RelativeLayout
-                android:id="@+id/rellay1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:layout_below="@+id/imageView_logo">
-
                 <TextView
                     android:id="@+id/tv_login"
                     android:layout_width="wrap_content"
@@ -47,6 +40,7 @@
                     android:fontFamily="sans-serif-medium"
                     android:text="Login"
                     android:textColor="@color/white"
+                    android:layout_below="@+id/imageView_logo"
                     android:textSize="30sp" />
 
                 <LinearLayout
@@ -135,17 +129,9 @@
 
             </RelativeLayout>
 
-        </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/rellay2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:visibility="gone"
-            >
+
+
             <TextView
                 android:id="@+id/signUpTextView"
                 android:layout_width="wrap_content"
@@ -155,9 +141,10 @@
                 android:text="Don't have an account? Signup Now"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="30dp"
                 android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
                 />
-        </RelativeLayout>
 
-    </RelativeLayout>
+
+ </RelativeLayout>

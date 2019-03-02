@@ -46,20 +46,6 @@ public class SignUp extends AppCompatActivity {
         FirebaseApp.initializeApp(getApplicationContext());
         setContentView(R.layout.activity_sign_up);
 
-        //signUp
-        rellay1 = (RelativeLayout) findViewById(R.id.rellay1);
-        rellay2 = (RelativeLayout) findViewById(R.id.rellay2);
-
-        Handler handler = new Handler();
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                rellay1.setVisibility(View.VISIBLE);
-                rellay2.setVisibility(View.VISIBLE);
-            }
-        };
-        handler.postDelayed(runnable, 0);
-        //SignUp
 
         email = findViewById(R.id.emaileditText);
         progressBar=findViewById(R.id.progressbar);
