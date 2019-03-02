@@ -260,6 +260,7 @@ public class Table extends Fragment {
                 break;
             case 3:
                 //wind hourly data
+                Log.d("case 3 ","  entering " );
                 ref.child("wind").child(FirebaseAuth.getInstance().getUid().toString()).
                         addValueEventListener(new ValueEventListener() {
                             @Override
@@ -282,22 +283,22 @@ public class Table extends Fragment {
                                                 try {
                                                     //getting the whole json object from the response
                                                     JSONObject obj = new JSONObject(response);
-                                                    Log.i("obj",obj.getString("daily"));
+                                                   // Log.i("obj",obj.getString("daily"));
                                                     JSONObject objt = obj.getJSONObject("daily");
-                                                    JSONArray array = obj.getJSONArray("data");
-                                                    Log.i("wind speed :",array.getJSONObject(0).getString("windSpeed"));
+                                                    JSONArray array = objt.getJSONArray("data");
+                                                    Log.d("wind speed :",array.getJSONObject(0).getString("windSpeed"));
 
-                                                    for (int i = 0; i < array.length(); i += 2) {
+                                                    for (int i = 0; i < array.length(); i += 1) {
                                                         JSONObject item = array.getJSONObject(i);
 
                                                         String windSpeed = item.getString("windSpeed");
 
                                                         String time = item.getString("time");
 
-                                                        long  h= (Integer.valueOf(windSpeed)*Integer.valueOf(Area)*Integer.valueOf(noofpanels)*Integer.valueOf(efficiency))/1000*36;
-                                                        Log.d("energy",String.valueOf(h));
+                                                        //long  h= (Integer.valueOf(windSpeed)*Integer.valueOf(Area)*Integer.valueOf(noofpanels)*Integer.valueOf(efficiency))/1000*36;
+                                                        //Log.d("energy",String.valueOf(h));
 
-                                                        solar_hour_data.add(new data_class(time, String.valueOf(h)));
+                                                        solar_hour_data.add(new data_class(time, windSpeed));
 
 
                                                     }
