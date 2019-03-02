@@ -89,7 +89,7 @@ public class wind_activity extends AppCompatActivity {
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(this, SignIn.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                finish();   
+                finish();
                 startActivity(intent);
                 return true;
 

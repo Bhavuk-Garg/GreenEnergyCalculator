@@ -49,7 +49,7 @@ public class SignUp extends AppCompatActivity {
 
         email = findViewById(R.id.emaileditText);
         progressBar=findViewById(R.id.progressbar);
-
+        progressBar.bringToFront();
         findViewById(R.id.signInTextView).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

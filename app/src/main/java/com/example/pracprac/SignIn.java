@@ -37,6 +37,7 @@ public class SignIn extends AppCompatActivity  {
     EditText email;
     EditText pass;
     String emailString,passString;
+    TextView signUpView;
     boolean doubleBackToExitPressedOnce = false;
 
     //Sign In
@@ -54,15 +55,20 @@ public class SignIn extends AppCompatActivity  {
 
 
         progressBar=findViewById(R.id.progressbar);
-        TextView signUpView=findViewById(R.id.signUpTextView);
-        signUpView.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
+        signUpView=findViewById(R.id.signUpTextView);
+        signUpView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 Intent intent;
                 intent = new Intent(SignIn.this, SignUp.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
+
             }
         });
+        progressBar.bringToFront();
+        TextView signUpView=findViewById(R.id.signUpTextView);
+
 
         email = findViewById(R.id.emaileditText);
         pass = findViewById(R.id.passwordEditText);
