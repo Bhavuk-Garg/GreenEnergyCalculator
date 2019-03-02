@@ -210,7 +210,7 @@ public class Table extends Fragment {
                                                                 if(count==0)
                                                                 {
 
-                                                                    long  h= (dnisum*Integer.valueOf(Area)*Integer.valueOf(noofpanels)*Integer.valueOf(efficiency))/1000*18;
+                                                                    long  h= (dnisum*Integer.valueOf(Area)*Integer.valueOf(noofpanels)*Integer.valueOf(efficiency))/1000*1  8;
                                                                     Log.d("energy",String.valueOf(h));
 
                                                                     solar_hour_data.add(new data_class(todayString, String.valueOf(h)));
@@ -275,7 +275,7 @@ public class Table extends Fragment {
                                 ratedVoltage=obj.getRatedVoltage();
 
                                 String url="";
-                                url = "https://api.darksky.net/forecast/7d1ff8ef8796fbcb790c6d9a424391c7/"+latitude+","+longitude+"?exclude=currently,minutely,hourly,alerts,flags";
+                                url = "https://api.darksky.net/forecast/7d1ff8ef8796fbcb790c6d9a424391c7/"+latitude+","+longitude+"?exclude=currently,minutely,daily,alerts,flags";
 
                                 StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                                         new Response.Listener<String>() {
@@ -284,24 +284,37 @@ public class Table extends Fragment {
                                                 try {
                                                     //getting the whole json object from the response
                                                     JSONObject obj = new JSONObject(response);
-                                                   // Log.i("obj",obj.getString("daily"));
-                                                    JSONObject objt = obj.getJSONObject("daily");
+                                                    // Log.i("obj",obj.getString("daily"));
+                                                    JSONObject objt = obj.getJSONObject("hourly");
                                                     JSONArray array = objt.getJSONArray("data");
-                                                    Log.d("wind speed :",array.getJSONObject(0).getString("windSpeed"));
+                                                    Log.d("wind speed 2:",array.getJSONObject(0).getString("windSpeed"));
 
                                                     for (int i = 0; i < array.length(); i += 1) {
                                                         JSONObject item = array.getJSONObject(i);
 
                                                         String windSpeed = item.getString("windSpeed");
                                                         windSpeed=String.valueOf(Double.valueOf(windSpeed)*1609.34/3600);
-                                                        String temp;
-
+                                                        Double windsp =Double.valueOf(windSpeed);
+                                                        Double temp= ((Double.valueOf(item.getString("temperature")) ));
+                                                        temp= (temp-32)*5/9+273.15;
+                                                        //Log.d("temp",temp);
+                                                        Double pressure = Double.valueOf(item.getString("pressure"))*100;
                                                         String time = item.getString("time");
+                                                        long time2= Long.valueOf(time);
+                                                        java.util.Date formatteddate= new java.util.Date(time2*1000);
 
-                                                        long  h= (Integer.valueOf(windSpeed)*Integer.valueOf(Area)*Integer.valueOf(noofpanels)*Integer.valueOf(efficiency))/1000*36;
+
+
+                                                        //Date dataobject= new Date(time);
+                                                        //String formatteddate= formatDate(dataobject);
+                                                        //Log.d("formatdate",formatteddate);
+
+                                                        double  h= Double.valueOf(MechMaxEff)*Double.valueOf(GeneMaxEff)*Double.valueOf(rotorCount)*Double.valueOf(ratedVoltage)*3.14*Double.valueOf(diameter)*Double.valueOf(diameter)/4;
+
                                                         //Log.d("energy",String.valueOf(h));
-
-                                                        solar_hour_data.add(new data_class(time, windSpeed));
+                                                        h*=0.5*windsp*windsp*windsp*pressure/(287.05*temp)*24*3600/1000000;
+                                                        Log.d("valueof h 2",String.valueOf(h));
+                                                        solar_hour_data.add(new data_class(formatteddate.toString().substring(0,16), String.valueOf(h)));
 
 
                                                     }
@@ -492,10 +505,6 @@ public class Table extends Fragment {
         return dueDateAsNormal;
     }
 
-    public String formatDate(Date dataobject){
-        SimpleDateFormat dataformat= new SimpleDateFormat("MMM dd, yyyy");
-        return dataformat.format(dataobject);
-    }
 
     }
 
