@@ -34,14 +34,7 @@ public class SignUp extends AppCompatActivity {
 
     //signUp
     RelativeLayout rellay1, rellay2;
-    Handler handler = new Handler();
-    Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            rellay1.setVisibility(View.VISIBLE);
-            rellay2.setVisibility(View.VISIBLE);
-        }
-    };
+
     //signUp
 
     @Override
@@ -54,6 +47,14 @@ public class SignUp extends AppCompatActivity {
         rellay1 = (RelativeLayout) findViewById(R.id.rellay1);
         rellay2 = (RelativeLayout) findViewById(R.id.rellay2);
 
+        Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                rellay1.setVisibility(View.VISIBLE);
+                rellay2.setVisibility(View.VISIBLE);
+            }
+        };
         handler.postDelayed(runnable, 0);
         //SignUp
 

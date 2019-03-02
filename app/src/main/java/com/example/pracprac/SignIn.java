@@ -7,7 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -32,14 +34,7 @@ public class SignIn extends AppCompatActivity  {
 
     //Sign In
     RelativeLayout rellay1, rellay2;
-    Handler handler = new Handler();
-    Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            rellay1.setVisibility(View.VISIBLE);
-            rellay2.setVisibility(View.VISIBLE);
-        }
-    };
+
     //Sign In
 
     @Override
@@ -49,9 +44,18 @@ public class SignIn extends AppCompatActivity  {
         FirebaseApp.initializeApp(this);
         setContentView(R.layout.activity_sign_in);
 
-        //Sign In
         rellay1 = (RelativeLayout) findViewById(R.id.rellay1);
         rellay2 = (RelativeLayout) findViewById(R.id.rellay2);
+
+        Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                rellay1.setVisibility(View.VISIBLE);
+                rellay2.setVisibility(View.VISIBLE);
+            }
+        };
+        //Sign In
 
         handler.postDelayed(runnable, 1400);
         //Sign In

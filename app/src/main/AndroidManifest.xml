@@ -35,11 +35,11 @@
         <activity
             android:name=".SignUp"
             android:screenOrientation="portrait"
-            android:theme="@style/LoginTheme" />
+             />
         <activity
             android:name=".SignIn"
             android:screenOrientation="portrait"
-            android:theme="@style/LoginTheme">
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
