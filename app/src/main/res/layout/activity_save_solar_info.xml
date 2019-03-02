@@ -26,13 +26,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="70dp"
+            android:layout_marginTop="8dp"
             android:fontFamily="sans-serif-medium"
             android:text="LATITUDE"
             android:textColor="@android:color/background_dark"
             android:textSize="25sp"
-            android:textStyle="bold|italic"
-            tools:ignore="HardcodedText,UnusedAttribute" />
+            tools:ignore="HardcodedText,UnusedAttribute"
+            android:layout_below="@id/getLocationButton"/>
 
         <TextView
             android:id="@+id/longitudeTextView"
@@ -45,7 +45,6 @@
             android:text="LONGITUDE"
             android:textColor="@android:color/background_dark"
             android:textSize="25sp"
-            android:textStyle="bold|italic"
             tools:ignore="HardcodedText,UnusedAttribute" />
 
         <EditText
@@ -79,19 +78,20 @@
             android:id="@+id/getLocationButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/longitudeTextView"
+            android:layout_below="@id/entercityEdittext"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="34dp"
             android:drawableLeft="@drawable/ic_my_location_black_24dp"
             android:text="  GET LOCATION"
             android:textColor="@android:color/background_light"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:onClick="findLocation"/>
 
         <TextView
             android:id="@+id/area"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/getLocationButton"
+            android:layout_below="@id/longitudeTextView"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="26dp"
             android:text="AREA OF PANEL"
@@ -128,7 +128,7 @@
             android:layout_below="@id/eff"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="26dp"
-            android:text="No. of Panel"
+            android:text="NO. OF PANEL"
             android:textColor="@android:color/background_dark"
             android:textSize="20sp" />
 
@@ -193,6 +193,18 @@
             android:text="CALCULATE ENERGY"
             android:textColor="@android:color/background_light"
             android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/entercityEdittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:layout_marginTop="70dp"
+            android:layout_marginHorizontal="20dp"
+            android:textSize="20sp"
+            android:hint="ENTER THE CITY NAME"
+            />
     </RelativeLayout>
 </ScrollView>
 
