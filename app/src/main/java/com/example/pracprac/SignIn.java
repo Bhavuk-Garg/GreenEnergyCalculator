@@ -128,11 +128,19 @@ public class SignIn extends AppCompatActivity  {
                         progressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
 
-                            Log.i("activity_sign_in", "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Intent intent =new Intent(SignIn.this,Admin.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
+                            if(mAuth.getCurrentUser().isEmailVerified())
+                            {
+
+                                Log.i("activity_sign_in", "signInWithEmail:success");
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                Intent intent =new Intent(SignIn.this,Admin.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                            }
+                            else
+                            {
+                                Toast.makeText(SignIn.this,"Please Verify your email",Toast.LENGTH_SHORT).show();
+                            }
                         } else {
                             // If sign in fails, display a message to the user.
                             Toast.makeText(SignIn.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();

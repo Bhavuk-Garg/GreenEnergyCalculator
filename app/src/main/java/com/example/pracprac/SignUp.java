@@ -1,12 +1,14 @@
 package com.example.pracprac;
 
 import android.content.Intent;
+import android.icu.text.UnicodeSetSpanner;
 import android.media.tv.TvContract;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
@@ -15,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
@@ -113,8 +116,22 @@ public class SignUp extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 progressBar.setVisibility(View.GONE);
                 if (task.isSuccessful()) {
+                    mAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful())
+                            {
+                                pass.setText("");
+                                email.setText("");
+                                mAuth.signOut();
+                                Toast.makeText(SignUp.this,"Registered successfully check your email and verify", Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                Toast.makeText(SignUp.this,task.getException().toString(),Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
 
-                    startActivity(new Intent(SignUp.this,Admin.class));
                         
                 } else {
                     if (task.getException() instanceof FirebaseAuthUserCollisionException) {
