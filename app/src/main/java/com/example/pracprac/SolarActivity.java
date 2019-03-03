@@ -1,5 +1,6 @@
 package com.example.pracprac;
 
+import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,10 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.squareup.picasso.Picasso;
 
 
 public class SolarActivity extends AppCompatActivity {
@@ -30,6 +35,7 @@ public class SolarActivity extends AppCompatActivity {
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.nav_white_24dp);
         navView = findViewById(R.id.navigationView);
+        Picasso.with(this).load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString()).into((ImageView) navView.getHeaderView(0).findViewById(R.id.userImage));
         drawerLayout=findViewById(R.id.drawerLayout);
         Fragment fragment=new solar_wind_fragment();
         FragmentManager manager=getSupportFragmentManager();

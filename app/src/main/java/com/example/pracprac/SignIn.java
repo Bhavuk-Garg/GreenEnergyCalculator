@@ -1,5 +1,6 @@
 package com.example.pracprac;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -7,9 +8,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,7 +24,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 
 public class SignIn extends AppCompatActivity  {
@@ -30,12 +35,33 @@ public class SignIn extends AppCompatActivity  {
     String emailString,passString;
     boolean doubleBackToExitPressedOnce = false;
 
+    //Sign In
+    RelativeLayout rellay1, rellay2;
+
+    //Sign In
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         FirebaseApp.initializeApp(this);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_sign_in);
+
+        rellay1 = (RelativeLayout) findViewById(R.id.rellay1);
+        rellay2 = (RelativeLayout) findViewById(R.id.rellay2);
+
+        Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                rellay1.setVisibility(View.VISIBLE);
+                rellay2.setVisibility(View.VISIBLE);
+            }
+        };
+        //Sign In
+
+        handler.postDelayed(runnable, 1400);
+        //Sign In
 
         progressBar=findViewById(R.id.progressbar);
         TextView signUpView=findViewById(R.id.signUpTextView);
@@ -98,7 +124,7 @@ public class SignIn extends AppCompatActivity  {
                         progressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
 
-                            Log.i("SignIn", "signInWithEmail:success");
+                            Log.i("activity_sign_in", "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             Intent intent =new Intent(SignIn.this,Admin.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -148,4 +174,26 @@ public class SignIn extends AppCompatActivity  {
                 startActivity(new Intent(SignIn.this,Admin.class));
         }
     }
+
+//@Override
+//public boolean onTouchEvent(MotionEvent event) {
+//    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+//    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+//    return true;
+//}
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        View view = getCurrentFocus();
+        if (view != null && (ev.getAction() == MotionEvent.ACTION_UP || ev.getAction() == MotionEvent.ACTION_MOVE) && view instanceof EditText && !view.getClass().getName().startsWith("android.webkit.")) {
+            int scrcoords[] = new int[2];
+            view.getLocationOnScreen(scrcoords);
+            float x = ev.getRawX() + view.getLeft() - scrcoords[0];
+            float y = ev.getRawY() + view.getTop() - scrcoords[1];
+            if (x < view.getLeft() || x > view.getRight() || y < view.getTop() || y > view.getBottom())
+                ((InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow((this.getWindow().getDecorView().getApplicationWindowToken()), 0);
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
 }

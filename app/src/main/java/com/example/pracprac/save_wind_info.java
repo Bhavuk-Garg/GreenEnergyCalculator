@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -28,17 +29,116 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class save_wind_info extends AppCompatActivity {
-    EditText latEditText,lonEditText,diameterEditText,maxPowerEditText,mech_effEditText,rotorCountEditText,gene_effEditText;
+    EditText latEditText,lonEditText,diameterEditText,maxPowerEditText,mech_effEditText,rotorCountEditText,gene_effEditText,cityEditText;
     Button calcEnergyButton;
     String UId;
     windClass data;
     Toolbar toolbar;
+    String latitude;
+    String longitude;
+
+    public void findLocation(View view)
+    {
+        String city=cityEditText.getText().toString();
+        if(city.isEmpty())
+            Toast.makeText(save_wind_info.this,"ENTER CITY NAME",Toast.LENGTH_SHORT).show();
+        else {
+            DownloadTask task = new DownloadTask();
+            task.execute("https://api.opencagedata.com/geocode/v1/json?q=" + city + "&key=b5c64abf8d664de09d47e1c92b0a5d05");
+        }
+
+    }
+
+    public class DownloadTask extends AsyncTask<String, Void, String> {
+
+
+        @Override
+        protected String doInBackground(String... urls) {
+            String result="";
+            URL url;
+            HttpURLConnection urlConnection =null;
+
+
+            try {
+                url = new URL(urls[0]);
+                urlConnection=(HttpURLConnection)url.openConnection();
+                InputStream in=urlConnection.getInputStream();
+                InputStreamReader reader =new InputStreamReader(in);
+                int data=reader.read();
+                while(data!=-1)
+                {
+                    char current=(char)data;
+                    result+=current;
+                    data=reader.read();
+                }
+                return  result;
+            } catch (MalformedURLException e) {
+
+                e.printStackTrace();
+            } catch (IOException e) {
+
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            try {
+                JSONObject jsonObject=new JSONObject((s));
+                String results=jsonObject.getString("results");
+                JSONArray resSub1=new JSONArray(results);
+                JSONObject bounds=resSub1.getJSONObject(0);
+                String boundsString=bounds.getString("bounds");
+                Log.i("bounds",boundsString);
+                Pattern p=Pattern.compile( "\"lat\":(.*?),\"lng\":" );
+                Matcher m=p.matcher(boundsString);
+                while(m.find())
+                {
+                    latitude=m.group(1);
+                }
+                p=Pattern.compile( "\"lng\":(.*?)," );
+                m=p.matcher(boundsString);
+                while(m.find())
+                {
+                    longitude=m.group(1);
+                }
+                Log.i(latitude,longitude);
+                int length=longitude.length();
+                longitude = longitude.substring(0, length-1);
+                Log.i(latitude,longitude);
+                latEditText.setText(latitude);
+                lonEditText.setText(longitude);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Toast.makeText(save_wind_info.this,"ENTER VALID CITY NAME",Toast.LENGTH_SHORT).show();
+            }
+
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_save_wind_info);
+        cityEditText=findViewById(R.id.entercitywindEdittext);
         latEditText=findViewById(R.id.latitudeEdittext);
         lonEditText=findViewById(R.id.longitudeEdittext);
         diameterEditText=findViewById(R.id.rdEdittext);
