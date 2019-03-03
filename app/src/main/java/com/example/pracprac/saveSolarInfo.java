@@ -153,6 +153,7 @@ public class saveSolarInfo extends AppCompatActivity {
             public void onClick(View v) {
                 if(storeInfo())
                 {
+                    finish();
                     startActivity(new Intent(saveSolarInfo.this, SolarActivity.class));
                 }
 
