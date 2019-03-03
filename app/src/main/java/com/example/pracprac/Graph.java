@@ -555,10 +555,11 @@ public class Graph extends Fragment {
                                                             //Log.d("energy",String.valueOf(h));
                                                             h*=0.5*windsp*windsp*windsp*pressure/(287.05*temp)*24*3600/1000000;
                                                             Log.d("bhavuk","daily");
+                                                            String check = "\n";
 
                                                             yValues.add(new Entry(j,h));
                                                             String formatdate =formatteddate.toString().substring(4,10);
-                                                            formatdate= formatdate+"\n"+formatteddate.toString().substring(11,16);
+                                                            formatdate= formatdate+check+formatteddate.toString().substring(11,16);
                                                             Log.d("formatedate=",formatdate);
                                                             timeaxis.add(formatdate);
 
@@ -584,10 +585,6 @@ public class Graph extends Fragment {
                                                         xaxis.setValueFormatter(new MyAxisValueFormatter(timeaxis));
                                                         xaxis.setGranularity(1);
                                                         xaxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-
-
-
-
 
 
 

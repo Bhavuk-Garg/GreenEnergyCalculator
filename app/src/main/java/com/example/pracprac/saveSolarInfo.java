@@ -1,6 +1,9 @@
 package com.example.pracprac;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -9,8 +12,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -131,6 +136,7 @@ public class saveSolarInfo extends AppCompatActivity {
     }
 
 
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,6 +153,18 @@ public class saveSolarInfo extends AppCompatActivity {
         toolbar=findViewById(R.id.savesolartoolbar);
         setSupportActionBar(toolbar);
 
+        boolean connected = false;
+        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {}
+            //we are connected to a network
+
+        else{
+            latEditText.setInputType(InputType.TYPE_NULL);
+            Toast.makeText(saveSolarInfo.this, "NO INTERNET CONNECTION", Toast.LENGTH_SHORT).show();
+
+        }
+
         UId=FirebaseAuth.getInstance().getCurrentUser().getUid();
         calcEnergyButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,6 +176,7 @@ public class saveSolarInfo extends AppCompatActivity {
 
             }
         });
+
 
 
     }
@@ -224,4 +243,6 @@ public class saveSolarInfo extends AppCompatActivity {
         ref.addValueEventListener(valueEvnetListener);
 
     }
+
+
 }

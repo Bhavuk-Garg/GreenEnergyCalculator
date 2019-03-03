@@ -1,6 +1,9 @@
 package com.example.pracprac;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -9,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -145,6 +149,16 @@ public class save_wind_info extends AppCompatActivity {
         gene_effEditText=findViewById(R.id.generatorEdittext);
         toolbar=findViewById(R.id.savewindtoolbar);
         setSupportActionBar(toolbar);
+        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {}
+        //we are connected to a network
+
+        else{
+            latEditText.setInputType(InputType.TYPE_NULL);
+            Toast.makeText(save_wind_info.this, "NO INTERNET CONNECTION", Toast.LENGTH_SHORT).show();
+
+        }
         UId=FirebaseAuth.getInstance().getCurrentUser().getUid();
         calcEnergyButton.setOnClickListener(new View.OnClickListener() {
             @Override
