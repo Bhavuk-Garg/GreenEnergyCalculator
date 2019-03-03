@@ -35,6 +35,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Queue;
 import java.util.TimeZone;
 
 
@@ -106,6 +107,7 @@ public class Table extends Fragment {
                                     efficiency=obj.maxEfficieny;
                                     maxpower=obj.ratedVoltage;
                                     String url="";
+
                                     url = "https://api.solcast.com.au/radiation/forecasts?longitude="+longitude+"&latitude="+latitude+"&api_key=dsQiZXOrsq3npvYi6XMs-s1RLAumDaVQ&format=json";
                                     StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                                             new Response.Listener<String>() {
@@ -122,7 +124,7 @@ public class Table extends Fragment {
                                                             JSONObject item = array.getJSONObject(i);
                                                             String dni = item.getString("dni");
                                                             String time = getNewDate(item.getString("period_end"));
-                                                            long  h= (Integer.valueOf(dni)*Integer.valueOf(Area)*Integer.valueOf(noofpanels)*Integer.valueOf(efficiency))/1000*36;
+                                                            float h= (float) ((Double.valueOf(dni)*Double.valueOf(Area)*Double.valueOf(noofpanels)*Double.valueOf(efficiency))/100000);
                                                             Log.d("energy",String.valueOf(h));
 
                                                             solar_hour_data.add(new data_class(time, String.valueOf(h)));
@@ -149,10 +151,13 @@ public class Table extends Fragment {
                                                 }
                                             });
                                     //creating a request queue
-                                    requestQueue = Volley.newRequestQueue(getActivity());
 
-                                    //adding the string request to request queue
-                                    requestQueue.add(stringRequest);
+                                    try{
+                                        RequestQueue Queue2 = Volley.newRequestQueue(getActivity());
+                                        Queue2.add(stringRequest);
+                                    } catch (Exception e){
+                                        Log.d("error in volley","look here");
+                                    }
 
 
                                 }
@@ -192,6 +197,8 @@ public class Table extends Fragment {
                                       Log.d("nextdate",todayString);
                                     String url="";
                                     url = "https://api.solcast.com.au/radiation/forecasts?longitude="+longitude+"&latitude="+latitude+"&api_key=dsQiZXOrsq3npvYi6XMs-s1RLAumDaVQ&format=json";
+
+
                                     StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                                             new Response.Listener<String>() {
                                                 @Override
@@ -217,7 +224,7 @@ public class Table extends Fragment {
                                                                 if(count==0)
                                                                 {
 
-                                                                    long  h= (dnisum*Integer.valueOf(Area)*Integer.valueOf(noofpanels)*Integer.valueOf(efficiency))/1000*18;
+                                                                    float  h= (float) (dnisum* (Double.valueOf(Area)*Double.valueOf(noofpanels)*Double.valueOf(efficiency))/100000);
                                                                     Log.d("energy",String.valueOf(h));
 
                                                                     solar_hour_data.add(new data_class(todayString, String.valueOf(h)));
@@ -249,10 +256,15 @@ public class Table extends Fragment {
                                                 }
                                             });
                                     //creating a request queue
-                                    requestQueue = Volley.newRequestQueue(getActivity());
 
                                     //adding the string request to request queue
-                                    requestQueue.add(stringRequest);
+
+                                   try{
+                                       RequestQueue Queue2 = Volley.newRequestQueue(getActivity());
+                                       Queue2.add(stringRequest);
+                                   } catch (Exception e){
+                                       Log.d("error in volley","look here");
+                                   }
 
 
                                 }
@@ -270,7 +282,7 @@ public class Table extends Fragment {
                 TextView winddatecolor= (TextView) view.findViewById(R.id.date);
                 winddatecolor.setBackgroundColor(getResources().getColor(R.color.windcolor));
                 TextView windenergycolor =(TextView) view.findViewById(R.id.energy);
-                winddatecolor.setBackgroundColor(getResources().getColor(R.color.windcolor));
+                windenergycolor.setBackgroundColor(getResources().getColor(R.color.windcolor));
                 ref.child("wind").child(FirebaseAuth.getInstance().getUid().toString()).
                         addValueEventListener(new ValueEventListener() {
                             @Override
@@ -322,9 +334,9 @@ public class Table extends Fragment {
                                                         double  h= Double.valueOf(MechMaxEff)*Double.valueOf(GeneMaxEff)*Double.valueOf(rotorCount)*Double.valueOf(ratedVoltage)*3.14*Double.valueOf(diameter)*Double.valueOf(diameter)/4;
 
                                                         //Log.d("energy",String.valueOf(h));
-                                                        h*=0.5*windsp*windsp*windsp*pressure/(287.05*temp)*24*3600/1000000;
+                                                        h*=0.5*windsp*windsp*windsp*pressure/(287.05*temp)/1000000000;
                                                         Log.d("valueof h 2",String.valueOf(h));
-                                                        solar_hour_data.add(new data_class(formatteddate.toString().substring(0,16), String.valueOf(h)));
+                                                        solar_hour_data.add(new data_class(formatteddate.toString().substring(0,16), String.format("%.4f",h)));
 
 
                                                     }
@@ -346,11 +358,13 @@ public class Table extends Fragment {
                                                 Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
                                             }
                                         });
-                                //creating a request queue
-                                requestQueue = Volley.newRequestQueue(getActivity());
+                                try{
+                                    RequestQueue Queue2 = Volley.newRequestQueue(getActivity());
+                                    Queue2.add(stringRequest);
+                                } catch (Exception e){
+                                    Log.d("error in volley","look here");
+                                }
 
-                                //adding the string request to request queue
-                                requestQueue.add(stringRequest);
 
 
                             }
@@ -417,9 +431,9 @@ public class Table extends Fragment {
                                                         double  h= Double.valueOf(MechMaxEff)*Double.valueOf(GeneMaxEff)*Double.valueOf(rotorCount)*Double.valueOf(ratedVoltage)*3.14*Double.valueOf(diameter)*Double.valueOf(diameter)/4;
 
                                                         //Log.d("energy",String.valueOf(h));
-                                                        h*=0.5*windsp*windsp*windsp*pressure/(287.05*temp)*24*3600/1000000;
+                                                        h*=0.5*windsp*windsp*windsp*pressure/(287.05*temp)*24/1000000000;
                                                         Log.d("valueof h",String.valueOf(h));
-                                                        solar_hour_data.add(new data_class(formatteddate.toString().substring(0,10), String.valueOf(h)));
+                                                        solar_hour_data.add(new data_class(formatteddate.toString().substring(0,10), String.format("%.4f",h)));
 
 
                                                     }
@@ -440,11 +454,12 @@ public class Table extends Fragment {
                                                 Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
                                             }
                                         });
-                                //creating a request queue
-                                requestQueue = Volley.newRequestQueue(getActivity());
-
-                                //adding the string request to request queue
-                                requestQueue.add(stringRequest);
+                                try{
+                                    RequestQueue Queue2 = Volley.newRequestQueue(getActivity());
+                                    Queue2.add(stringRequest);
+                                } catch (Exception e){
+                                    Log.d("error in volley","look here");
+                                }
 
 
                             }

@@ -137,7 +137,7 @@ public class Graph extends Fragment {
                                                             String time = getNewDate(item.getString("period_end"));
 
 
-                                                            float  h= (Integer.valueOf(dni)*Integer.valueOf(Area)*Integer.valueOf(noofpanels)*Integer.valueOf(efficiency))/1000*36;
+                                                            float  h= (float) ((Double.valueOf(dni)*Double.valueOf(Area)*Double.valueOf(noofpanels)*Double.valueOf(efficiency))/100000);
                                                             Log.d("energy",String.valueOf(h));
                                                             yValues.add(new Entry(i/2,h));
                                                             timeaxis.add(time);
@@ -185,11 +185,12 @@ public class Graph extends Fragment {
                                                 }
                                             });
                                     //creating a request queue
-                                    requestQueue = Volley.newRequestQueue(getActivity());
-
-                                    //adding the string request to request queue
-                                    requestQueue.add(stringRequest);
-
+                                    try{
+                                        RequestQueue Queue2 = Volley.newRequestQueue(getActivity());
+                                        Queue2.add(stringRequest);
+                                    } catch (Exception e){
+                                        Log.d("error in volley","look here");
+                                    }
 
                                 }
                             }
@@ -265,7 +266,7 @@ public class Graph extends Fragment {
                                                                 if(count==0)
                                                                 {
 
-                                                                    float h= (dnisum*Integer.valueOf(Area)*Integer.valueOf(noofpanels)*Integer.valueOf(efficiency))/1000*18;
+                                                                    float h= (float) ((dnisum*Double.valueOf(Area)*Double.valueOf(noofpanels)*Double.valueOf(efficiency))/100000);
                                                                     Log.d("energy",String.valueOf(h));
                                                                     yValues.add(new Entry(j,h));
                                                                     timeaxis.add(time);
@@ -327,11 +328,15 @@ public class Graph extends Fragment {
                                                 }
                                             });
                                     //creating a request queue
-                                    requestQueue = Volley.newRequestQueue(getActivity());
+                                    try {
+                                        requestQueue = Volley.newRequestQueue(getActivity());
 
-                                    //adding the string request to request queue
-                                    requestQueue.add(stringRequest);
-
+                                        //adding the string request to request queue
+                                        requestQueue.add(stringRequest);
+                                    }catch (Exception e)
+                                    {
+                                        Log.i("Graph error in volley","Bhavuk");
+                                    }
 
                                 }
                             }
@@ -413,7 +418,7 @@ public class Graph extends Fragment {
                                                             float  h= (float)(Double.valueOf(MechMaxEff)*Double.valueOf(GeneMaxEff)*Double.valueOf(rotorCount)*Double.valueOf(ratedVoltage)*3.14*Double.valueOf(diameter)*Double.valueOf(diameter)/4);
 
                                                             //Log.d("energy",String.valueOf(h));
-                                                            h*=0.5*windsp*windsp*windsp*pressure/(287.05*temp)*24*3600/1000000;
+                                                            h*=0.5*windsp*windsp*windsp*pressure/(287.05*temp)/1000000000;
                                                             Log.d("bhavuk","daily");
 
                                                                     yValues.add(new Entry(j,h));
@@ -469,11 +474,13 @@ public class Graph extends Fragment {
                                                     Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
                                                 }
                                             });
-                                    //creating a request queue
-                                    requestQueue = Volley.newRequestQueue(getActivity());
+                                    try{
+                                        RequestQueue Queue2 = Volley.newRequestQueue(getActivity());
+                                        Queue2.add(stringRequest);
+                                    } catch (Exception e){
+                                        Log.d("error in volley","look here");
+                                    }
 
-                                    //adding the string request to request queue
-                                    requestQueue.add(stringRequest);
 
 
                                 }
@@ -553,7 +560,7 @@ public class Graph extends Fragment {
                                                             float  h= (float)(Double.valueOf(MechMaxEff)*Double.valueOf(GeneMaxEff)*Double.valueOf(rotorCount)*Double.valueOf(ratedVoltage)*3.14*Double.valueOf(diameter)*Double.valueOf(diameter)/4);
 
                                                             //Log.d("energy",String.valueOf(h));
-                                                            h*=0.5*windsp*windsp*windsp*pressure/(287.05*temp)*24*3600/1000000;
+                                                            h*=0.5*windsp*windsp*windsp*pressure/(287.05*temp)*24/1000000000;
                                                             Log.d("bhavuk","daily");
 
                                                             yValues.add(new Entry(j,h));
@@ -609,11 +616,13 @@ public class Graph extends Fragment {
                                                     Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
                                                 }
                                             });
-                                    //creating a request queue
-                                    requestQueue = Volley.newRequestQueue(getActivity());
+                                    try{
+                                        RequestQueue Queue2 = Volley.newRequestQueue(getActivity());
+                                        Queue2.add(stringRequest);
+                                    } catch (Exception e){
+                                        Log.d("error in volley","look here");
+                                    }
 
-                                    //adding the string request to request queue
-                                    requestQueue.add(stringRequest);
 
 
                                 }
